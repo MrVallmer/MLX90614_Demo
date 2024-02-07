@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom2_i2c_master.h"
+#include "config/LVLEU05/system/time/sys_time.h"
+#include "log.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -39,6 +41,9 @@ typedef enum
     I2C_SMB_TRANSFER_STATUS_IDLE,
 
 } I2C_SMB_TRANSFER_STATUS;
+
+#define I2C_SMB_TIMEOUT_MS  1000
+#define I2C_SMB_STEP_MS     100
 
 
 /* ************************************************************************** */

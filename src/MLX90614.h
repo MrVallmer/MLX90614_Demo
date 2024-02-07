@@ -35,7 +35,6 @@
 #include <stdio.h>
 #include "config/LVLEU05/system/time/sys_time.h"
 #include "config/LVLEU05/peripheral/gpio/plib_gpio.h"
-#include "config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom2_i2c_master.h"
 #include "i2c_smb.h"
 #include "log.h"
 

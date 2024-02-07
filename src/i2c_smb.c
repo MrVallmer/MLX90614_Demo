@@ -48,6 +48,21 @@ void I2C_SMBCallback(uintptr_t context )
     }
 }
 
+/// @Brief standard delay
+void I2C_SMBDelay (uint32_t ms)
+{
+    SYS_TIME_HANDLE timer = SYS_TIME_HANDLE_INVALID;
+
+    if (SYS_TIME_DelayMS(ms, &timer) != SYS_TIME_SUCCESS)
+    {
+        LOG_print_critical(I2C_SMB_LOG, "delay %u failed", ms);
+    }
+    else if(SYS_TIME_DelayIsComplete(timer) != true)
+    {          
+        while (SYS_TIME_DelayIsComplete(timer) == false);
+    }
+}
+
 /* ************************************************************************** */
 /// TODO: SMB API driver methods
 /* ************************************************************************** */
@@ -68,7 +83,14 @@ bool I2C_SMBWriteRead (uint16_t sa, uint8_t *wdata, uint8_t wlength, uint8_t *rd
     bool bValid = SERCOM2_I2C_WriteRead(sa, wdata, wlength, rdata, rlength);
     
     // Wait Bus free ...    
-    while(transfer_status == I2C_SMB_TRANSFER_STATUS_IN_PROGRESS);
+    int timeout_counter_100_ms = 0;
+    while(transfer_status == I2C_SMB_TRANSFER_STATUS_IN_PROGRESS) {
+        
+        I2C_SMBDelay(I2C_SMB_STEP_MS);
+        timeout_counter_100_ms++;        
+        if (timeout_counter_100_ms*I2C_SMB_STEP_MS > I2C_SMB_TIMEOUT_MS)
+            return false;
+    }
     
     // Capture possible error coming from I2C
     if (transfer_status == I2C_SMB_TRANSFER_STATUS_ERROR)
@@ -85,8 +107,15 @@ bool I2C_SMBWrite (uint16_t sa, uint8_t *wdata, uint8_t wlength)
     // Send the I2C command to write the register
     bool bValid = SERCOM2_I2C_Write(sa, wdata, wlength); 
     
-    // Wait Bus free ...    
-    while(transfer_status == I2C_SMB_TRANSFER_STATUS_IN_PROGRESS);
+    // Wait Bus free ...  
+    int timeout_counter_100_ms = 0;
+    while(transfer_status == I2C_SMB_TRANSFER_STATUS_IN_PROGRESS) {
+        
+        I2C_SMBDelay(I2C_SMB_STEP_MS);
+        timeout_counter_100_ms++;        
+        if (timeout_counter_100_ms*I2C_SMB_STEP_MS > I2C_SMB_TIMEOUT_MS)
+            return false;
+    }
     
     // Capture possible error coming from I2C
     if (transfer_status == I2C_SMB_TRANSFER_STATUS_ERROR)
@@ -104,7 +133,14 @@ bool I2C_SMBRead (uint16_t sa, uint8_t *rdata, uint8_t rlength)
     bool bValid = SERCOM2_I2C_Read(sa, rdata, rlength); 
     
     // Wait Bus free ...    
-    while(transfer_status == I2C_SMB_TRANSFER_STATUS_IN_PROGRESS);
+    int timeout_counter_100_ms = 0;
+    while(transfer_status == I2C_SMB_TRANSFER_STATUS_IN_PROGRESS) {
+        
+        I2C_SMBDelay(I2C_SMB_STEP_MS);
+        timeout_counter_100_ms++;        
+        if (timeout_counter_100_ms*I2C_SMB_STEP_MS > I2C_SMB_TIMEOUT_MS)
+            return false;
+    }
     
     // Capture possible error coming from I2C
     if (transfer_status == I2C_SMB_TRANSFER_STATUS_ERROR)
