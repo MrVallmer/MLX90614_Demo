@@ -71,6 +71,39 @@
 /// TODO: Table initialization
 /* ************************************************************************** */
 
+/// @brief EEPROM table.
+typedef union {
+
+    struct {
+        uint16_t to_max; // customer dependent object temperatures range max value
+        uint16_t to_min; // customer dependent object temperatures range min value
+        uint16_t pwmctrl; // Control bits for configuring the PWM/SDA pin
+        uint16_t ta_range; // customer dependent ambient temperatures range
+        uint16_t emissivity; // Object emissivity (factory default 1.0 = 0xFFFF)
+        uint16_t config_register; // ConfigRegister1 consists of control bits for configuring the analog and digital parts
+        uint16_t melexis_reserved_1[8];
+        uint16_t smb_address; // Slave address of sensor module (SMBus)
+        uint16_t melexis_reserved_2[13];
+        uint16_t id_number[4];
+    };
+    uint16_t value[32];
+} mlx90614_eeprom_table_t;
+
+/// @brief RAM table.
+typedef union {
+
+    struct {
+        uint16_t melexis_reserved_1[4];
+        uint16_t ir_ch_1; // Infra-red measure channel 1
+        uint16_t ir_ch_2; // Infra-red measure channel 2
+        uint16_t t_a; // Ambient temperature
+        uint16_t t_obj1; // Object temperature channel 1
+        uint16_t t_obj2; // Object temperature channel 2
+        uint16_t melexis_reserved_2[23];
+    };
+    uint16_t value[32];
+} mlx90614_ram_table_t;
+
 mlx90614_eeprom_table_t mlx90614_eeprom_table;
 mlx90614_ram_table_t mlx90614_ram_table;
 mlx90614_config_t mlx90614_config;
@@ -85,10 +118,8 @@ void MLX90614_init (mlx90614_config_t *config);
 void MLX90614_dft_config (void);
 void MLX90614_config(mlx90614_config_t *config);
 void MLX90614_Delay (uint32_t ms);
-
 bool SMB_read (uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength);
 bool SMB_write (uint8_t *wdata, uint8_t wlength);
-
 uint8_t MLX90614_SMBpec(uint8_t* data, size_t length);
 bool MLX90614_SMBcommand (uint8_t command);
 bool MLX90614_SMBread (uint8_t command, uint16_t* value);
@@ -98,7 +129,6 @@ bool MLX90614_SMBread_RAM (uint8_t reg_addr, uint16_t* value);
 bool MLX90614_SMBwrite_EEPROM (uint8_t reg_addr, uint16_t value);
 bool MLX90614_SMBdumpEE (void);
 bool MLX90614_SMBdumpRAM (void);
-
 bool MLX90614_SMB_Set_ConfigRegister (uint16_t mask, int shift, uint16_t value);
 bool MLX90614_SMB_Set_FIR (uint16_t value);
 bool MLX90614_SMB_Set_IIR (uint16_t value);
@@ -116,7 +146,9 @@ void MLX90614_Delay (uint32_t ms)
 
     if (SYS_TIME_DelayMS(ms, &timer) != SYS_TIME_SUCCESS)
     {
+#ifdef MLX90614_STDIO
         LOG_print_critical(MLX90614_LOG, "delay %u failed", ms);
+#endif
     }
     else if(SYS_TIME_DelayIsComplete(timer) != true)
     {          
@@ -130,7 +162,9 @@ void MLX90614_powerup (void) {
     // Check if power module is configured
     if (mlx90614_config.pwr_pin != 0xFF) {
         // Set power to high level
+#ifdef MLX90614_STDIO
         LOG_print_debug(MLX90614_LOG, "power up");
+#endif
         GPIO_PinWrite(mlx90614_config.pwr_pin, POWER_UP);
     }
 
@@ -144,7 +178,9 @@ void MLX90614_powerdown (void) {
     // Check if power module is configured
     if (mlx90614_config.pwr_pin != 0xFF) {
         // Set power to high level
+#ifdef MLX90614_STDIO
         LOG_print_debug(MLX90614_LOG, "power down");
+#endif
         GPIO_PinWrite(mlx90614_config.pwr_pin, POWER_DOWN);
     }
 
@@ -176,7 +212,9 @@ void MLX90614_init (mlx90614_config_t* config)
 /// @brief Load the default configuration (only if empty)
 void MLX90614_dft_config (void) {
 
+#ifdef MLX90614_STDIO
     LOG_print_debug(MLX90614_LOG, "load default configuration");
+#endif
     mlx90614_config.pwr_pin = DFT_PWR_PIN;
     mlx90614_config.init_timeout_ms = DFT_TNIT_TIMEOUT_MS;
     mlx90614_config.write_timeout_ms = DFT_SMB_TIMEOUT_MS;
@@ -192,7 +230,9 @@ void MLX90614_dft_config (void) {
 /// @param config user configuration.
 void MLX90614_config(mlx90614_config_t *config) {
 
+#ifdef MLX90614_STDIO
     LOG_print_debug(MLX90614_LOG, "load user configuration");
+#endif
     mlx90614_config.pwr_pin = config->pwr_pin;
     mlx90614_config.slave_address = config->slave_address & 0x7F;
     mlx90614_config.read_timeout_ms = config->read_timeout_ms;
@@ -278,10 +318,12 @@ bool MLX90614_SMBcommand (uint8_t command) {
 
     // Write data
     if (!SMB_write(&buffer[1], 2))
+#ifdef MLX90614_STDIO
         LOG_print_error(MLX90614_LOG, "command operation failed");
     
-    LOG_print_debug(MLX90614_LOG, "command operation SA=%d, CMD=%d", 
-        mlx90614_config.slave_address, buffer[1]);
+    LOG_print_debug(MLX90614_LOG, "command operation SA=%d, CMD=%d",             
+    mlx90614_config.slave_address, buffer[1]);
+#endif
     
     return true;
 }
@@ -314,10 +356,12 @@ bool MLX90614_SMBwrite (uint8_t command, uint16_t value) {
 
     // Write data
     if (!SMB_write(&buffer[1], 4))
+#ifdef MLX90614_STDIO
         LOG_print_error(MLX90614_LOG, "write operation failed");
     
     LOG_print_debug(MLX90614_LOG, "SMB write SA=%d, CMD=%d, LSB=%d, MSB=%d, PEC=%d", 
             mlx90614_config.slave_address, buffer[1], buffer[2], buffer[3], buffer[4]);
+#endif
     
     return true;
 }
@@ -350,15 +394,21 @@ bool MLX90614_SMBread (uint8_t command, uint16_t* value)
 
         // Check pec
         if (MLX90614_SMBpec(buffer, 5) == *pec) {
+#ifdef MLX90614_STDIO
             LOG_print_debug(MLX90614_LOG, "SMB read SA=%d, CMD=%d, LSB=%d, MSB=%d, PEC=%d", 
                 mlx90614_config.slave_address, buffer[1], buffer[3], buffer[4], buffer[5]); 
+#endif
             return true;
         }            
-        
+#ifdef MLX90614_STDIO        
         LOG_print_error(MLX90614_LOG, "read operation failed [PEC]");
+#endif
+        
     }    
 
+#ifdef MLX90614_STDIO
     LOG_print_error(MLX90614_LOG, "read operation failed");
+#endif
     return false;
 }
 
@@ -454,8 +504,10 @@ bool MLX90614_SMB_Set_ConfigRegister (uint16_t mask, int shift, uint16_t value) 
     
     // check if value has been written correctly
     if (mlx90614_eeprom_table.config_register != data){
-        mlx90614_eeprom_table.config_register = EMPTY_VALUE;  
+        mlx90614_eeprom_table.config_register = EMPTY_VALUE;
+#ifdef MLX90614_STDIO 
         LOG_print_error(MLX90614_LOG, "set config_register with value %d failed", value);
+#endif
         return false;
     }
 
@@ -513,11 +565,15 @@ bool MLX90614_SMB_Set_Emissivity (float value) {
     // check if value has been written correctly
     if (mlx90614_eeprom_table.emissivity != emissivity || mlx90614_eeprom_table.melexis_reserved_2[0] != reserved_backup){
         mlx90614_eeprom_table.emissivity = EMPTY_VALUE;  
+#ifdef MLX90614_STDIO 
         LOG_print_error(MLX90614_LOG, "set emissivity with value %d failed", emissivity);
+#endif
         return false;
     }    
 
+#ifdef MLX90614_STDIO 
     LOG_print_info(MLX90614_LOG, "set emissivity with value %d", emissivity);
+#endif
     return true;
 }
 
@@ -530,9 +586,11 @@ bool MLX90614_SMB_Set_FIR (uint16_t value)
 
     // Compare old configuration with new configuration
     if (old_value != value)
-        if (MLX90614_SMB_Set_ConfigRegister(0xF8FF, 8, value))
+        if (MLX90614_SMB_Set_ConfigRegister(0xF8FF, 8, value))  {
+#ifdef MLX90614_STDIO 
             LOG_print_info(MLX90614_LOG, "set fir with value %d", value);
-        else
+#endif
+        } else
             return false;
     
     return true;
@@ -547,9 +605,11 @@ bool MLX90614_SMB_Set_IIR (uint16_t value)
     
     // Compare old configuration with new configuration
     if (old_value != value)
-        if (MLX90614_SMB_Set_ConfigRegister(0xFFF8, 0, value))
+        if (MLX90614_SMB_Set_ConfigRegister(0xFFF8, 0, value)) {
+#ifdef MLX90614_STDIO 
             LOG_print_info(MLX90614_LOG, "set iir with value %d", value);
-        else
+#endif
+        } else
             return false;
 
     return true;
@@ -564,9 +624,11 @@ bool MLX90614_SMB_Set_IR_Sensor (uint16_t value)
 
     // Compare old configuration with new configuration
     if (old_value != value)    
-        if (MLX90614_SMB_Set_ConfigRegister(0xFFBF, 6, value))
+        if (MLX90614_SMB_Set_ConfigRegister(0xFFBF, 6, value)) {
+#ifdef MLX90614_STDIO 
             LOG_print_info(MLX90614_LOG, "set ir_sensor with value %d", value);
-        else
+#endif
+        } else
             return false;
   
     return true;
@@ -604,7 +666,9 @@ uint8_t MLX90614_SMBBegin (mlx90614_config_t* config)
     MLX90614_powerdown();
     MLX90614_powerup();
     
+#ifdef MLX90614_STDIO 
     LOG_print_info(MLX90614_LOG, "begin with SMB communication");
+#endif
     return MLX90614_ERROR_NONE;
 }
 
@@ -625,7 +689,9 @@ uint8_t MLX90614_SMBGetTa(float *ta)
 
     // Conversion in Celsius
     *ta = (float)mlx90614_ram_table.t_a * 0.02f - 273.15;
+#ifdef MLX90614_STDIO 
     LOG_print_info(MLX90614_LOG, "ambient temperature %f", *ta);
+#endif
         
     return MLX90614_ERROR_NONE;
 }  
@@ -647,7 +713,9 @@ uint8_t MLX90614_SMBGetT0bj1(float *tobj)
 
     // Conversion in Celsius
     *tobj = (float)mlx90614_ram_table.t_obj1 * 0.02f - 273.15;
+#ifdef MLX90614_STDIO 
     LOG_print_info(MLX90614_LOG, "object 1 temperature %f", *tobj);
+#endif
         
     return MLX90614_ERROR_NONE;
 } 
@@ -669,7 +737,9 @@ uint8_t MLX90614_SMBGetT0bj2(float *tobj)
 
     // Conversion in Celsius
     *tobj = (float)mlx90614_ram_table.t_obj2 * 0.02f - 273.15;
+#ifdef MLX90614_STDIO 
     LOG_print_info(MLX90614_LOG, "object 2 temperature %f", *tobj);
+#endif
         
     return MLX90614_ERROR_NONE;
 } 
@@ -687,7 +757,9 @@ uint8_t MLX90614_SMBGetIRch1(uint16_t *ir_data)
 
     // Transfer value
     *ir_data = mlx90614_ram_table.ir_ch_1;
+#ifdef MLX90614_STDIO 
     LOG_print_info(MLX90614_LOG, "ir channel 1 temperature %d", *ir_data);
+#endif
         
     return MLX90614_ERROR_NONE;
 } 
@@ -705,7 +777,9 @@ uint8_t MLX90614_SMBGetIRch2(uint16_t *ir_data)
 
     // Transfer value
     *ir_data = mlx90614_ram_table.ir_ch_2;
+#ifdef MLX90614_STDIO 
     LOG_print_info(MLX90614_LOG, "ir channel 2 temperature %d", *ir_data);
+#endif
         
     return MLX90614_ERROR_NONE;
 }

@@ -11,8 +11,6 @@
     Set all define, struct and variable for the driver.
 
   @UserCase: Read measurements from MLX90614
-     - set configuration (optional): MLX90614_clear_config(), 
-                                     MLX90614_config_pinout(...), MLX90614_config_i2c(...), MLX90614_config_filter(...)
      - begin driver: MLX90614_SMBbegin()
      - loop and print measurement: MLX90614_SMB_GetTa(...), MLX90614_SMB_GetT0bj1(...), MLX90614_SMB_GetT0bj2(...), 
                                    MLX90614_SMB_GetIRch1(...), MLX90614_SMB_GetIRch2(...)
@@ -28,6 +26,7 @@
 #ifndef MLX90614_H    // Guards against multiple inclusion
 #define MLX90614_H
 
+#define MLX90614_STDIO      // Enable debug information of module on the stdio log interface.
 
 #include <stdio.h>
 #include <string.h>
@@ -36,7 +35,10 @@
 #include "config/LVLEU05/system/time/sys_time.h"
 #include "config/LVLEU05/peripheral/gpio/plib_gpio.h"
 #include "i2c_smb.h"
+
+#ifdef MLX90614_STDIO
 #include "log.h"
+#endif
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -45,6 +47,7 @@ extern "C" {
 
 #endif
 
+/// @brief Error code operational code    
 #define MLX90614_ERROR_NONE                     0
 #define MLX90614_ERROR_EPPROM_READ              1
 #define MLX90614_ERROR_RAM_READ                 2
@@ -81,41 +84,7 @@ typedef enum {
     MLX90614_IR_SENSOR_DUAL   
 } mlx90614_ir_sensor_setting_t;
 
-/// @brief EEPROM table.
-typedef union {
-
-    struct {
-        uint16_t to_max; // customer dependent object temperatures range max value
-        uint16_t to_min; // customer dependent object temperatures range min value
-        uint16_t pwmctrl; // Control bits for configuring the PWM/SDA pin
-        uint16_t ta_range; // customer dependent ambient temperatures range
-        uint16_t emissivity; // Object emissivity (factory default 1.0 = 0xFFFF)
-        uint16_t config_register; // ConfigRegister1 consists of control bits for configuring the analog and digital parts
-        uint16_t melexis_reserved_1[8];
-        uint16_t smb_address; // Slave address of sensor module (SMBus)
-        uint16_t melexis_reserved_2[13];
-        uint16_t id_number[4];
-    };
-    uint16_t value[32];
-} mlx90614_eeprom_table_t;
-
-/// @brief RAM table.
-typedef union {
-
-    struct {
-        uint16_t melexis_reserved_1[4];
-        uint16_t ir_ch_1; // Infra-red measure channel 1
-        uint16_t ir_ch_2; // Infra-red measure channel 2
-        uint16_t t_a; // Ambient temperature
-        uint16_t t_obj1; // Object temperature channel 1
-        uint16_t t_obj2; // Object temperature channel 2
-        uint16_t melexis_reserved_2[23];
-    };
-    uint16_t value[32];
-} mlx90614_ram_table_t;
-
 /// @brief configuration parameters.
-
 typedef struct mlx90614_config_t {
     int pwr_pin;
     int init_timeout_ms;

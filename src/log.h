@@ -49,7 +49,7 @@
 #define LOG_CRITICAL_LEVEL     5
 
 // Change the main log level as you want, it impact on all modules
-#define LOG_LEVEL              LOG_INFO_LEVEL
+#define LOG_LEVEL              LOG_DEBUG_LEVEL
 
 typedef struct {
     uint8_t tag;
