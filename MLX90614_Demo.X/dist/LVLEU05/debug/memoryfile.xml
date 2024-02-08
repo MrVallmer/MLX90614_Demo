@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <executable name="dist/LVLEU05/debug/MLX90614_Demo.X.debug.elf">
+    <memory name="program">
+      <units>bytes</units>
+      <length>1048576</length>
+      <used>46179</used>
+      <free>1002397</free>
+    </memory>
+    <memory name="data">
+      <units>bytes</units>
+      <length>131072</length>
+      <used>43699</used>
+      <free>87373</free>
+    </memory>
+  </executable>
+</project>
