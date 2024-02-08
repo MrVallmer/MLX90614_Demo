@@ -62,8 +62,8 @@ typedef struct {
 /* ************************************************************************** */
 
 #define SYSTEM_LOG          1 
-#define MLX90614_LOG        2
-#define I2C_SMB_LOG         3
+#define I2C_SMB_LOG         2
+#define MLX90614_LOG        10
 
 /* ************************************************************************** */
 /// LOG API methods
@@ -71,6 +71,7 @@ typedef struct {
 extern void LOG_initialize (bool enable);
 extern void LOG_enable (void);
 extern void LOG_disable (void);
+extern void LOG_modify_level (uint8_t tag, uint8_t level);
 extern void LOG_print_debug (uint8_t tag, const char *format, ...);
 extern void LOG_print_info (uint8_t tag, const char *format, ...);
 extern void LOG_print_warning (uint8_t tag, const char *format, ...);

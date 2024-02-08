@@ -41,6 +41,9 @@
 extern "C" {
 
 #endif
+    
+/// @brief Error code operational code 
+#define MLX90614_LOG_LEVEL      LOG_INFO_LEVEL
 
 /// @brief Error code operational code    
 #define MLX90614_ERROR_NONE                     0

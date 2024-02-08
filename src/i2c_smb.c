@@ -83,12 +83,12 @@ bool I2C_SMBWriteRead (uint16_t sa, uint8_t *wdata, uint8_t wlength, uint8_t *rd
     bool bValid = SERCOM2_I2C_WriteRead(sa, wdata, wlength, rdata, rlength);
     
     // Wait Bus free ...    
-    int timeout_counter_100_ms = 0;
+    int timeout_counter_step = 0;
     while(transfer_status == I2C_SMB_TRANSFER_STATUS_IN_PROGRESS) {
         
         I2C_SMBDelay(I2C_SMB_STEP_MS);
-        timeout_counter_100_ms++;        
-        if (timeout_counter_100_ms*I2C_SMB_STEP_MS > I2C_SMB_TIMEOUT_MS)
+        timeout_counter_step++;        
+        if (timeout_counter_step*I2C_SMB_STEP_MS > I2C_SMB_TIMEOUT_MS)
             return false;
     }
     

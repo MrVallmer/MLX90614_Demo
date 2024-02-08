@@ -104,14 +104,14 @@ void APP_Initialize ( void )
     
     // TODO: User configuration to test for MLX90614
     appData.mlx90614_config.pwr_pin = GPIO_PIN_RA7;
-    appData.mlx90614_config.init_timeout_ms = 1000;
-    appData.mlx90614_config.write_timeout_ms = 25;
-    appData.mlx90614_config.read_timeout_ms = 25;
+    appData.mlx90614_config.init_timeout_ms = 260;
+    appData.mlx90614_config.write_timeout_ms = 10;
+    appData.mlx90614_config.read_timeout_ms = 0;
     appData.mlx90614_config.slave_address = 0x5A;
-    appData.mlx90614_config.fir_setting = MLX90614_FIR_128;
+    appData.mlx90614_config.fir_setting = MLX90614_FIR_1024;
     appData.mlx90614_config.iir_setting = MLX90614_IIR_100;
     appData.mlx90614_config.ir_sensor_setting = MLX90614_IR_SENSOR_SINGLE;
-    appData.mlx90614_config.emissivity = 0.95;
+    appData.mlx90614_config.emissivity = 0.80;
     
     // Initialize logger
     LOG_initialize (true);  

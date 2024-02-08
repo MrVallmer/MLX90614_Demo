@@ -98,12 +98,26 @@ void LOG_initialize (bool enable) {
         return;
     
     uint8_t ret_code = 0;
-    ret_code |= LOG_set_level(SYSTEM_LOG, LOG_DEBUG_LEVEL, "SYSTEM");
-    ret_code |= LOG_set_level(MLX90614_LOG, LOG_DEBUG_LEVEL, "MLX90614");
-    ret_code |= LOG_set_level(I2C_SMB_LOG, LOG_DEBUG_LEVEL, "I2C_SMB");
+    ret_code |= LOG_set_level(SYSTEM_LOG, LOG_CRITICAL_LEVEL, "SYSTEM");
+    ret_code |= LOG_set_level(MLX90614_LOG, LOG_CRITICAL_LEVEL, "MLX90614");
+    ret_code |= LOG_set_level(I2C_SMB_LOG, LOG_CRITICAL_LEVEL, "I2C_SMB");
     
     if (ret_code != 0)
         LOG_print_critical(0, "Log module initialization error");
+}
+
+/// @brief Change a module log level.
+/// @param tag tag of the module.
+/// @param message filter for module.
+/// @return true if operation is correctly executed.
+void LOG_modify_level(uint8_t tag, uint8_t level) {
+    
+    if (!log_enable)
+        return;
+    
+    for (int i = 0; i < log_stack_size; i++)
+        if (log_level_stack[i].tag == tag)
+            log_level_stack[i].level = level;
 }
 
 /// @brief Enable printout. 

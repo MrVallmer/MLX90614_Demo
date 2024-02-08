@@ -42,8 +42,8 @@ typedef enum
 
 } I2C_SMB_TRANSFER_STATUS;
 
-#define I2C_SMB_TIMEOUT_MS  1000
-#define I2C_SMB_STEP_MS     100
+#define I2C_SMB_TIMEOUT_MS  100
+#define I2C_SMB_STEP_MS     5
 
 
 /* ************************************************************************** */
