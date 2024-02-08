@@ -141,7 +141,7 @@ void APP_Tasks ( void )
             // Set LED status
             GPIO_LED_BLUE_Clear(); GPIO_LED_RED_Set(); GPIO_LED_GREEN_Set();
             
-            LOG_print_info(SYSTEM_LOG, "System initialization (I2C, MLX90614) ...");
+            LOG_print_info(SYSTEM_LOG, "System initialization (I2C, MLX90614) ... \n\r");
             I2C_SMBBegin();
             appData.error_code = MLX90614_SMBStart(&appData.mlx90614_config);
             
@@ -158,8 +158,9 @@ void APP_Tasks ( void )
             // Set LED status
             GPIO_LED_RED_Clear(); GPIO_LED_GREEN_Clear(); GPIO_LED_BLUE_Set();                       
             
-            vTaskDelay(appData.timeout / portTICK_PERIOD_MS);
-            appData.state = APP_STATE_READ; 
+            LOG_print_info(SYSTEM_LOG, "Wait ... \n\r");
+            vTaskDelay(appData.timeout / portTICK_PERIOD_MS);            
+            appData.state = APP_STATE_READ;             
             break;
         }
 
@@ -186,7 +187,7 @@ void APP_Tasks ( void )
             // Set LED status
             GPIO_LED_GREEN_Clear(); GPIO_LED_BLUE_Clear(); GPIO_LED_RED_Set();
             
-            LOG_print_error(SYSTEM_LOG, "code=%d, wait and restart ...", appData.error_code);
+            LOG_print_error(SYSTEM_LOG, "code=%d, wait and restart ... \n\r", appData.error_code);
             vTaskDelay(appData.timeout / portTICK_PERIOD_MS);
             
             // Stop driver and reset error code

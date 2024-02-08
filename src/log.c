@@ -98,9 +98,9 @@ void LOG_initialize (bool enable) {
         return;
     
     uint8_t ret_code = 0;
-    ret_code |= LOG_set_level(SYSTEM_LOG, LOG_CRITICAL_LEVEL, "SYSTEM");
-    ret_code |= LOG_set_level(MLX90614_LOG, LOG_CRITICAL_LEVEL, "MLX90614");
-    ret_code |= LOG_set_level(I2C_SMB_LOG, LOG_CRITICAL_LEVEL, "I2C_SMB");
+    ret_code |= LOG_set_level(SYSTEM_LOG, LOG_INFO_LEVEL, "SYSTEM");
+    ret_code |= LOG_set_level(MLX90614_LOG, LOG_INFO_LEVEL, "MLX90614");
+    ret_code |= LOG_set_level(I2C_SMB_LOG, LOG_INFO_LEVEL, "I2C_SMB");
     
     if (ret_code != 0)
         LOG_print_critical(0, "Log module initialization error");

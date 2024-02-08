@@ -897,7 +897,7 @@ uint8_t MLX90614_SMBGetTa (float *ta) {
     }
 
     // Check that sign bit is positive (negative temperature not are possible)
-    if (mlx90614_ram_table.t_a > 0x7FFF)
+    if (mlx90614_ram_table.t_a > 0x7FFF | mlx90614_ram_table.t_a  < 0x27AD)
         return MLX90614_ERROR_TEMPERATURE_INVALID;
 
     // Conversion in Celsius
@@ -918,7 +918,7 @@ uint8_t MLX90614_SMBGetT0bj1(float *tobj) {
     }
 
     // Check that sign bit is positive (negative temperature not are possible)
-    if (mlx90614_ram_table.t_obj1 > 0x7FFF)
+    if (mlx90614_ram_table.t_obj1 > 0x7FFF | mlx90614_ram_table.t_obj1  < 0x27AD)
         return MLX90614_ERROR_TEMPERATURE_INVALID;
 
     // Conversion in Celsius
@@ -945,7 +945,7 @@ uint8_t MLX90614_SMBGetT0bj2 (float *tobj) {
     }
 
     // Check that sign bit is positive (negative temperature not are possible)
-    if (mlx90614_ram_table.t_obj2 > 0x7FFF)
+    if (mlx90614_ram_table.t_obj2 > 0x7FFF | mlx90614_ram_table.t_obj2  < 0x27AD)
         return MLX90614_ERROR_TEMPERATURE_INVALID;
 
     // Conversion in Celsius
