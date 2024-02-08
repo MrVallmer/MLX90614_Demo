@@ -26,8 +26,6 @@
 #ifndef MLX90614_H    // Guards against multiple inclusion
 #define MLX90614_H
 
-#define MLX90614_STDIO      // Enable debug information of module on the stdio log interface.
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -35,10 +33,7 @@
 #include "config/LVLEU05/system/time/sys_time.h"
 #include "config/LVLEU05/peripheral/gpio/plib_gpio.h"
 #include "i2c_smb.h"
-
-#ifdef MLX90614_STDIO
 #include "log.h"
-#endif
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -100,13 +95,14 @@ typedef struct mlx90614_config_t {
 /* ************************************************************************** */
 /// SMB API methods
 /* ************************************************************************** */
-extern uint8_t MLX90614_SMBStart(mlx90614_config_t* config);
-extern void MLX90614_Stop(void);
-extern uint8_t MLX90614_SMBGetTa(float *ta);
-extern uint8_t MLX90614_SMBGetT0bj1(float *tobj);
-extern uint8_t MLX90614_SMBGetT0bj2(float *tobj);
-extern uint8_t MLX90614_SMBGetIRch1(uint16_t *ir_data);
-extern uint8_t MLX90614_SMBGetIRch2(uint16_t *ir_data);
+extern uint8_t MLX90614_SMBStart (mlx90614_config_t* config);
+extern void MLX90614_Stop (void);
+extern uint8_t MLX90614_SMBGetTa (float *ta);
+extern uint8_t MLX90614_SMBGetT0bj1 (float *tobj);
+extern uint8_t MLX90614_SMBGetT0bj2 (float *tobj);
+extern uint8_t MLX90614_SMBGetIRch1 (uint16_t *ir_data);
+extern uint8_t MLX90614_SMBGetIRch2 (uint16_t *ir_data);
+extern uint64_t MLX90614_SMBGetID (void);
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
