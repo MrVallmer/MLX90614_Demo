@@ -143,7 +143,7 @@ void APP_Tasks ( void )
             
             LOG_print_info(SYSTEM_LOG, "System initialization (I2C, MLX90614) ...");
             I2C_SMBBegin();
-            appData.error_code = MLX90614_SMBBegin(&appData.mlx90614_config);
+            appData.error_code = MLX90614_SMBStart(&appData.mlx90614_config);
             
             if (appData.error_code > 0)
                 appData.state = APP_STATE_ERROR;
@@ -189,7 +189,8 @@ void APP_Tasks ( void )
             LOG_print_error(SYSTEM_LOG, "code=%d, wait and restart ...", appData.error_code);
             vTaskDelay(appData.timeout / portTICK_PERIOD_MS);
             
-            // Reset error code
+            // Stop driver and reset error code
+            MLX90614_Stop();
             appData.error_code = 0;
             appData.state = APP_STATE_INIT; 
         }

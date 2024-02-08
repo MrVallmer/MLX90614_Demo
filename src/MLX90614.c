@@ -640,7 +640,7 @@ bool MLX90614_SMB_Set_IR_Sensor (uint16_t value)
 
 /// @brief Begin operation of MLX90614 driver with SMBus
 /// @return execution state of the action
-uint8_t MLX90614_SMBBegin (mlx90614_config_t* config)
+uint8_t MLX90614_SMBStart (mlx90614_config_t* config)
 {
     bool bValid = true;
     
@@ -667,9 +667,20 @@ uint8_t MLX90614_SMBBegin (mlx90614_config_t* config)
     MLX90614_powerup();
     
 #ifdef MLX90614_STDIO 
-    LOG_print_info(MLX90614_LOG, "begin with SMB communication");
+    LOG_print_info(MLX90614_LOG, "begin operation with SMB communication");
 #endif
     return MLX90614_ERROR_NONE;
+}
+
+/// @brief Stop operation of MLX90614 driver
+void MLX90614_Stop (void)
+{
+    // Stop module
+    MLX90614_powerdown();
+    
+#ifdef MLX90614_STDIO 
+    LOG_print_info(MLX90614_LOG, "stop operation");
+#endif
 }
 
 /// @brief Get the ambient temperature (Ta) from the MLX90614 sensor via SMBus.

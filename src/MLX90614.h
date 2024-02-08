@@ -100,7 +100,8 @@ typedef struct mlx90614_config_t {
 /* ************************************************************************** */
 /// SMB API methods
 /* ************************************************************************** */
-extern uint8_t MLX90614_SMBBegin(mlx90614_config_t* config);
+extern uint8_t MLX90614_SMBStart(mlx90614_config_t* config);
+extern void MLX90614_Stop(void);
 extern uint8_t MLX90614_SMBGetTa(float *ta);
 extern uint8_t MLX90614_SMBGetT0bj1(float *tobj);
 extern uint8_t MLX90614_SMBGetT0bj2(float *tobj);
