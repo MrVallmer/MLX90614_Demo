@@ -22,12 +22,6 @@
             <logicalFolder name="cmcc" displayName="cmcc" projectFiles="true">
               <itemPath>../src/config/LVLEU05/peripheral/cmcc/plib_cmcc.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="eic" displayName="eic" projectFiles="true">
-              <itemPath>../src/config/LVLEU05/peripheral/eic/plib_eic.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="evsys" displayName="evsys" projectFiles="true">
-              <itemPath>../src/config/LVLEU05/peripheral/evsys/plib_evsys.h</itemPath>
-            </logicalFolder>
             <logicalFolder name="gpio" displayName="gpio" projectFiles="true">
               <itemPath>../src/config/LVLEU05/peripheral/gpio/plib_gpio.h</itemPath>
             </logicalFolder>
@@ -260,12 +254,6 @@
             <logicalFolder name="cmcc" displayName="cmcc" projectFiles="true">
               <itemPath>../src/config/LVLEU05/peripheral/cmcc/plib_cmcc.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="eic" displayName="eic" projectFiles="true">
-              <itemPath>../src/config/LVLEU05/peripheral/eic/plib_eic.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="evsys" displayName="evsys" projectFiles="true">
-              <itemPath>../src/config/LVLEU05/peripheral/evsys/plib_evsys.c</itemPath>
-            </logicalFolder>
             <logicalFolder name="gpio" displayName="gpio" projectFiles="true">
               <itemPath>../src/config/LVLEU05/peripheral/gpio/plib_gpio.c</itemPath>
             </logicalFolder>
@@ -360,8 +348,8 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
         <pack name="PIC32CX-BZ_DFP" vendor="Microchip" version="1.3.238"/>
+        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
@@ -698,6 +686,8 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1000000-2001ffff"/>
+        <property key="programmerToGoFilePath"
+                  value="D:/mplab/firmware/MLX90614_Demo/MLX90614_Demo.X/debug/LVLEU05/MLX90614_Demo_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>
