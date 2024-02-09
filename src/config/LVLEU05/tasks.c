@@ -102,7 +102,7 @@ void SYS_Tasks ( void )
         /* Create OS Thread for APP_Tasks. */
     (void) xTaskCreate((TaskFunction_t) lAPP_Tasks,
                 "APP_Tasks",
-                4096,
+                256,
                 NULL,
                 1,
                 &xAPP_Tasks);
