@@ -11280,7 +11280,7 @@
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;stdio&gt;
   &lt;stdio dnOrder=&quot;0&quot; id=&quot;STDIN_BUFF_MODE&quot;&gt;
     &lt;Values dnOrder=&quot;0&quot;&gt;
-      &lt;User dnOrder=&quot;0&quot; value=&quot;false&quot;/&gt;
+      &lt;User dnOrder=&quot;0&quot; value=&quot;true&quot;/&gt;
     &lt;/Values&gt;
   &lt;/stdio&gt;
 &lt;/stdio&gt;
@@ -11290,7 +11290,9 @@
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="stdio" name="STDOUT_BUFF_MODE"/>
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;stdio&gt;
   &lt;stdio dnOrder=&quot;0&quot; id=&quot;STDOUT_BUFF_MODE&quot;&gt;
-    &lt;Values dnOrder=&quot;0&quot;/&gt;
+    &lt;Values dnOrder=&quot;0&quot;&gt;
+      &lt;User dnOrder=&quot;0&quot; value=&quot;true&quot;/&gt;
+    &lt;/Values&gt;
   &lt;/stdio&gt;
 &lt;/stdio&gt;
 </value>
@@ -12064,7 +12066,7 @@
       </entry>
       <entry>
          <file>..\src\config\LVLEU05\definitions.h</file>
-         <hash>31dd22d7401804f7c3895598063cb805201ba62e3a6e88ac68436e510137f8dd</hash>
+         <hash>926fe276bfe8068cc84f274dcb9a3932c96eee1427eec1bb6271a99c71b2498b</hash>
       </entry>
       <entry>
          <file>..\src\config\LVLEU05\device.h</file>
@@ -12096,7 +12098,7 @@
       </entry>
       <entry>
          <file>..\src\config\LVLEU05\initialization.c</file>
-         <hash>944b4de651e79feb4b37af9d732da088ae59e889f68e5f58f570fa7aab156799</hash>
+         <hash>8050b4027b4adf7813aec85695e244ac5e6b7b13b1518ebbf0cd578f4179e90f</hash>
       </entry>
       <entry>
          <file>..\src\config\LVLEU05\interrupts.c</file>
