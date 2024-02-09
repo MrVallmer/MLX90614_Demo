@@ -20,6 +20,8 @@
 
 // Initialize the transfer status to default state
 I2C_SMB_TRANSFER_STATUS transfer_status = I2C_SMB_TRANSFER_STATUS_IDLE;
+// Semaphore creation
+SemaphoreHandle_t xSemaphore = NULL;
 
 /* ************************************************************************** */
 /// TODO: Local Methods
@@ -48,104 +50,156 @@ void I2C_SMBCallback(uintptr_t context )
     }
 }
 
-/// @Brief standard delay
-void I2C_SMBDelay (uint32_t ms)
-{
-    SYS_TIME_HANDLE timer = SYS_TIME_HANDLE_INVALID;
-
-    if (SYS_TIME_DelayMS(ms, &timer) != SYS_TIME_SUCCESS)
-    {
-        LOG_print_critical(I2C_SMB_LOG, "delay %u failed", ms);
-    }
-    else if(SYS_TIME_DelayIsComplete(timer) != true)
-    {          
-        while (SYS_TIME_DelayIsComplete(timer) == false);
-    }
-}
-
 /* ************************************************************************** */
 /// TODO: SMB API driver methods
 /* ************************************************************************** */
 
 /// @brief Initialization of the MLX90614 driver
-void I2C_SMBBegin (void)
-{
+bool I2C_SMBBegin (void) {
+    
     /* Register the TWIHS Callback with transfer status as context */
     SERCOM2_I2C_CallbackRegister( I2C_SMBCallback, (uintptr_t)&transfer_status );
+    
+    /* Create the semaphore to guard a shared resource.  As we are using
+    the semaphore for mutual exclusion we create a mutex semaphore
+    rather than a binary semaphore. */
+    xSemaphore = xSemaphoreCreateMutex();
+    
+    if( xSemaphore == NULL )
+        return false;
 }
 
 /// @brief Write and Read operation
-bool I2C_SMBWriteRead (uint16_t sa, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
-{
-    // Initialize the transfer status
-    transfer_status = I2C_SMB_TRANSFER_STATUS_IN_PROGRESS;  
-    // Send the I2C command to read the register
-    bool bValid = SERCOM2_I2C_WriteRead(sa, wdata, wlength, rdata, rlength);
-    
-    // Wait Bus free ...    
-    int timeout_counter_step = 0;
-    while(transfer_status == I2C_SMB_TRANSFER_STATUS_IN_PROGRESS) {
-        
-        I2C_SMBDelay(I2C_SMB_STEP_MS);
-        timeout_counter_step++;        
-        if (timeout_counter_step*I2C_SMB_STEP_MS > I2C_SMB_TIMEOUT_MS)
-            return false;
+bool I2C_SMBWriteRead (uint16_t sa, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength) {
+  
+    /* See if we can obtain the semaphore.  If the semaphore is not
+    available wait 10 ticks to see if it becomes free. */
+    if( xSemaphoreTake( xSemaphore, ( TickType_t ) (I2C_SMB_TIMEOUT_MS / portTICK_PERIOD_MS) ) == pdTRUE )
+    {
+        /* We were able to obtain the semaphore and can now access the
+        shared resource. */
+
+        // Initialize the transfer status
+        transfer_status = I2C_SMB_TRANSFER_STATUS_IN_PROGRESS;  
+        // Send the I2C command to read the register
+        bool bValid = SERCOM2_I2C_WriteRead(sa, wdata, wlength, rdata, rlength);
+
+        // Wait Bus free ...    
+        int timeout_counter_step = 0;
+        while(transfer_status == I2C_SMB_TRANSFER_STATUS_IN_PROGRESS) {
+
+            vTaskDelay(I2C_SMB_STEP_MS / portTICK_PERIOD_MS);
+            timeout_counter_step++;        
+            if (timeout_counter_step*I2C_SMB_STEP_MS > I2C_SMB_TIMEOUT_MS) {
+                LOG_print_error(I2C_SMB_LOG, "transmit timeout expired");
+                return false;
+            }                
+        }
+
+        // Capture possible error coming from I2C
+        if (transfer_status == I2C_SMB_TRANSFER_STATUS_ERROR) {            
+            LOG_print_error(I2C_SMB_LOG, "transfer status %d", transfer_status);
+            return false;   
+        }                    
+
+        /* We have finished accessing the shared resource.  Release the
+        semaphore. */
+        xSemaphoreGive( xSemaphore );
+            
+        return bValid;
     }
     
-    // Capture possible error coming from I2C
-    if (transfer_status == I2C_SMB_TRANSFER_STATUS_ERROR)
-        return false;
-
-    return bValid;
+    LOG_print_error(I2C_SMB_LOG, "concurrent access");
+    return false;
 }
 
 /// @brief Write operation
 bool I2C_SMBWrite (uint16_t sa, uint8_t *wdata, uint8_t wlength)
 {
-    // Initialize the transfer status
-    transfer_status = I2C_SMB_TRANSFER_STATUS_IN_PROGRESS;  
-    // Send the I2C command to write the register
-    bool bValid = SERCOM2_I2C_Write(sa, wdata, wlength); 
     
-    // Wait Bus free ...  
-    int timeout_counter_100_ms = 0;
-    while(transfer_status == I2C_SMB_TRANSFER_STATUS_IN_PROGRESS) {
-        
-        I2C_SMBDelay(I2C_SMB_STEP_MS);
-        timeout_counter_100_ms++;        
-        if (timeout_counter_100_ms*I2C_SMB_STEP_MS > I2C_SMB_TIMEOUT_MS)
-            return false;
+    /* See if we can obtain the semaphore.  If the semaphore is not
+    available wait 10 ticks to see if it becomes free. */
+    if( xSemaphoreTake( xSemaphore, ( TickType_t ) (I2C_SMB_TIMEOUT_MS / portTICK_PERIOD_MS) ) == pdTRUE )
+    {
+        /* We were able to obtain the semaphore and can now access the
+        shared resource. */
+
+        // Initialize the transfer status
+        transfer_status = I2C_SMB_TRANSFER_STATUS_IN_PROGRESS;  
+        // Send the I2C command to read the register
+        bool bValid = SERCOM2_I2C_Write(sa, wdata, wlength);
+
+        // Wait Bus free ...    
+        int timeout_counter_step = 0;
+        while(transfer_status == I2C_SMB_TRANSFER_STATUS_IN_PROGRESS) {
+
+            vTaskDelay(I2C_SMB_STEP_MS / portTICK_PERIOD_MS);
+            timeout_counter_step++;        
+            if (timeout_counter_step*I2C_SMB_STEP_MS > I2C_SMB_TIMEOUT_MS) {
+                LOG_print_error(I2C_SMB_LOG, "transmit timeout expired");
+                return false;
+            }                
+        }
+
+        // Capture possible error coming from I2C
+        if (transfer_status == I2C_SMB_TRANSFER_STATUS_ERROR) {            
+            LOG_print_error(I2C_SMB_LOG, "transfer status %d", transfer_status);
+            return false;   
+        }                    
+
+        /* We have finished accessing the shared resource.  Release the
+        semaphore. */
+        xSemaphoreGive( xSemaphore );
+            
+        return bValid;
     }
     
-    // Capture possible error coming from I2C
-    if (transfer_status == I2C_SMB_TRANSFER_STATUS_ERROR)
-        return false;
-    
-    return bValid;
+    LOG_print_error(I2C_SMB_LOG, "concurrent access");
+    return false;
 }
 
 /// @brief Read operation
 bool I2C_SMBRead (uint16_t sa, uint8_t *rdata, uint8_t rlength)
 {
-    // Initialize the transfer status
-    transfer_status = I2C_SMB_TRANSFER_STATUS_IN_PROGRESS;  
-    // Send the I2C command to write the register
-    bool bValid = SERCOM2_I2C_Read(sa, rdata, rlength); 
     
-    // Wait Bus free ...    
-    int timeout_counter_100_ms = 0;
-    while(transfer_status == I2C_SMB_TRANSFER_STATUS_IN_PROGRESS) {
-        
-        I2C_SMBDelay(I2C_SMB_STEP_MS);
-        timeout_counter_100_ms++;        
-        if (timeout_counter_100_ms*I2C_SMB_STEP_MS > I2C_SMB_TIMEOUT_MS)
-            return false;
+    /* See if we can obtain the semaphore.  If the semaphore is not
+    available wait 10 ticks to see if it becomes free. */
+    if( xSemaphoreTake( xSemaphore, ( TickType_t ) (I2C_SMB_TIMEOUT_MS / portTICK_PERIOD_MS) ) == pdTRUE )
+    {
+        /* We were able to obtain the semaphore and can now access the
+        shared resource. */
+
+        // Initialize the transfer status
+        transfer_status = I2C_SMB_TRANSFER_STATUS_IN_PROGRESS;  
+        // Send the I2C command to read the register
+        bool bValid = SERCOM2_I2C_Read(sa, rdata, rlength);
+
+        // Wait Bus free ...    
+        int timeout_counter_step = 0;
+        while(transfer_status == I2C_SMB_TRANSFER_STATUS_IN_PROGRESS) {
+
+            vTaskDelay(I2C_SMB_STEP_MS / portTICK_PERIOD_MS);
+            timeout_counter_step++;        
+            if (timeout_counter_step*I2C_SMB_STEP_MS > I2C_SMB_TIMEOUT_MS) {
+                LOG_print_error(I2C_SMB_LOG, "transmit timeout expired");
+                return false;
+            }                
+        }
+
+        // Capture possible error coming from I2C
+        if (transfer_status == I2C_SMB_TRANSFER_STATUS_ERROR) {            
+            LOG_print_error(I2C_SMB_LOG, "transfer status %d", transfer_status);
+            return false;   
+        }                    
+
+        /* We have finished accessing the shared resource.  Release the
+        semaphore. */
+        xSemaphoreGive( xSemaphore );
+            
+        return bValid;
     }
     
-    // Capture possible error coming from I2C
-    if (transfer_status == I2C_SMB_TRANSFER_STATUS_ERROR)
-        return false;
-    
-    return bValid;
+    LOG_print_error(I2C_SMB_LOG, "concurrent access");
+    return false;
 }
 

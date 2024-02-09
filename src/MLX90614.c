@@ -121,7 +121,6 @@ void MLX90614_powerdown (void);
 void MLX90614_init (mlx90614_config_t *config);
 void MLX90614_dft_config (void);
 void MLX90614_config(mlx90614_config_t *config);
-void MLX90614_Delay (uint32_t ms);
 bool SMB_read (uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength);
 bool SMB_write (uint8_t *wdata, uint8_t wlength);
 uint8_t MLX90614_SMBpec(uint8_t* data, size_t length);
@@ -162,24 +161,6 @@ bool MLX90614_SMB_Set_PWMperiod (uint16_t value);
 /// TODO: BASIC driver methods to manage driver power and initialization
 /* ************************************************************************** */
 
-/// @Brief delay millisecond
-void MLX90614_Delay (uint32_t ms) {
-    
-    if (ms == 0)
-        return;
-	
-    SYS_TIME_HANDLE timer = SYS_TIME_HANDLE_INVALID;
-
-    if (SYS_TIME_DelayMS(ms, &timer) != SYS_TIME_SUCCESS)
-    {
-        LOG_print_critical(MLX90614_LOG, "delay %u failed", ms);
-    }
-    else if(SYS_TIME_DelayIsComplete(timer) != true)
-    {          
-        while (SYS_TIME_DelayIsComplete(timer) == false);
-    }
-}
-
 /// @brief Power up the driver (only if defined the pwr pin)
 void MLX90614_powerup (void) {
 
@@ -191,7 +172,7 @@ void MLX90614_powerup (void) {
     }
 
     // Wait setting time to be on safe side
-    MLX90614_Delay(mlx90614_config.init_timeout_ms);
+    vTaskDelay(mlx90614_config.init_timeout_ms / portTICK_PERIOD_MS);
 }
 
 /// @brief Power down the driver (only if defined the pwr pin)
@@ -205,7 +186,7 @@ void MLX90614_powerdown (void) {
     }
 
     // Wait setting time to be on safe side
-    MLX90614_Delay(mlx90614_config.init_timeout_ms);
+    vTaskDelay(mlx90614_config.init_timeout_ms / portTICK_PERIOD_MS);
 }
 
 /// @brief Initialization of the driver
@@ -272,7 +253,7 @@ bool SMB_read (uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
     bool bValid = I2C_SMBWriteRead((uint16_t) mlx90614_config.slave_address, wdata, wlength, rdata, rlength);
     
     // Wait ...   
-    MLX90614_Delay(mlx90614_config.read_timeout_ms);
+    vTaskDelay(mlx90614_config.read_timeout_ms / portTICK_PERIOD_MS);
 
     return bValid;
 }
@@ -284,7 +265,7 @@ bool SMB_write (uint8_t *wdata, uint8_t wlength) {
     bool bValid = I2C_SMBWrite((uint16_t) mlx90614_config.slave_address, wdata, wlength); 
     
     // Wait ...   
-    MLX90614_Delay(mlx90614_config.write_timeout_ms);
+    vTaskDelay(mlx90614_config.write_timeout_ms / portTICK_PERIOD_MS);
     
     return bValid;
 }
@@ -848,9 +829,6 @@ bool MLX90614_SMB_Set_PWMperiod (uint16_t value) {
 uint8_t MLX90614_SMBStart (mlx90614_config_t* config) {
 	
     bool bValid = true;
-    
-    // Set the level for logging
-    LOG_modify_level(MLX90614_LOG, MLX90614_LOG_LEVEL);
     
     // Initialize Driver and power for sensor
     MLX90614_init(config);    

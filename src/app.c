@@ -142,8 +142,8 @@ void APP_Tasks ( void )
             GPIO_LED_BLUE_Clear(); GPIO_LED_RED_Set(); GPIO_LED_GREEN_Set();
             
             LOG_print_info(SYSTEM_LOG, "System initialization (I2C, MLX90614) ... \n\r");
-            I2C_SMBBegin();
-            appData.error_code = MLX90614_SMBStart(&appData.mlx90614_config);
+            appData.error_code = I2C_SMBBegin() ? 0x00 : 0xFF;                
+            appData.error_code |= MLX90614_SMBStart(&appData.mlx90614_config);
             
             if (appData.error_code > 0)
                 appData.state = APP_STATE_ERROR;

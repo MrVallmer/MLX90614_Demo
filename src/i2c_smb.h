@@ -21,8 +21,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom2_i2c_master.h"
-#include "config/LVLEU05/system/time/sys_time.h"
 #include "log.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "third_party/rtos/FreeRTOS/Source/include/semphr.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -49,7 +51,7 @@ typedef enum
 /* ************************************************************************** */
 /// SMB API methods
 /* ************************************************************************** */
-extern void I2C_SMBBegin (void);
+extern bool I2C_SMBBegin (void);
 extern bool I2C_SMBWrite(uint16_t sa, uint8_t *wdata, uint8_t wlength);
 extern bool I2C_SMBRead(uint16_t sa, uint8_t *rdata, uint8_t rlength);
 extern bool I2C_SMBWriteRead(uint16_t sa, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength);

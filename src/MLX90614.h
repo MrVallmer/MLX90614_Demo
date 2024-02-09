@@ -30,10 +30,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "config/LVLEU05/system/time/sys_time.h"
 #include "config/LVLEU05/peripheral/gpio/plib_gpio.h"
 #include "i2c_smb.h"
 #include "log.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -42,10 +43,6 @@ extern "C" {
 
 #endif
     
-/// @brief Error code operational code 
-#define MLX90614_LOG_LEVEL      LOG_DEBUG_LEVEL
-//#define MLX90614_LOG_LEVEL      LOG_INFO_LEVEL
-
 /// @brief Error code operational code    
 #define MLX90614_ERROR_NONE                     0
 #define MLX90614_ERROR_EPPROM_READ              1
