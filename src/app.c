@@ -108,9 +108,9 @@ void APP_Initialize ( void )
     appData.mlx90614_config.write_timeout_ms = 10;
     appData.mlx90614_config.read_timeout_ms = 0;
     appData.mlx90614_config.slave_address = 0x5A;
-    appData.mlx90614_config.fir_setting = MLX90614_FIR_1024;
-    appData.mlx90614_config.iir_setting = MLX90614_IIR_100;
-    appData.mlx90614_config.ir_sensor_setting = MLX90614_IR_SENSOR_SINGLE;
+    appData.mlx90614_config.fir_setting = MLX90614_DRV_FIR_1024;
+    appData.mlx90614_config.iir_setting = MLX90614_DRV_IIR_100;
+    appData.mlx90614_config.ir_sensor_setting = MLX90614_DRV_IR_SENSOR_SINGLE;
     appData.mlx90614_config.emissivity = 0.80;
     
     // Initialize logger
@@ -142,8 +142,8 @@ void APP_Tasks ( void )
             GPIO_LED_BLUE_Clear(); GPIO_LED_RED_Set(); GPIO_LED_GREEN_Set();
             
             LOG_print_info(SYSTEM_LOG, "System initialization (I2C, MLX90614) ... \n\r");
-            appData.error_code = I2C_SMBBegin() ? 0x00 : 0xFF;                
-            appData.error_code |= MLX90614_SMBStart(&appData.mlx90614_config);
+            appData.error_code = I2C_DRV_Start() ? 0x00 : 0xFF;                
+            appData.error_code |= MLX90614_DRV_SMB_Start(&appData.mlx90614_config);
             
             if (appData.error_code > 0)
                 appData.state = APP_STATE_ERROR;
@@ -169,11 +169,11 @@ void APP_Tasks ( void )
             // Set LED status
             GPIO_LED_BLUE_Clear(); GPIO_LED_RED_Clear(); GPIO_LED_GREEN_Set();   
             
-            appData.error_code |= MLX90614_SMBGetTa(&appData.ta);
-            appData.error_code |= MLX90614_SMBGetT0bj1(&appData.tobj1);
-            appData.error_code |= MLX90614_SMBGetT0bj2(&appData.tobj2);
-            appData.error_code |= MLX90614_SMBGetIRch1(&appData.ir1);
-            appData.error_code |= MLX90614_SMBGetIRch2(&appData.ir2);
+            appData.error_code |= MLX90614_DRV_SMB_GetTa(&appData.ta);
+            appData.error_code |= MLX90614_DRV_SMB_GetT0bj1(&appData.tobj1);
+            appData.error_code |= MLX90614_DRV_SMB_GetT0bj2(&appData.tobj2);
+            appData.error_code |= MLX90614_DRV_SMB_GetIRch1(&appData.ir1);
+            appData.error_code |= MLX90614_DRV_SMB_GetIRch2(&appData.ir2);
             
             if (appData.error_code == 0)
                 appData.state = APP_STATE_IDLE; 
@@ -191,7 +191,7 @@ void APP_Tasks ( void )
             vTaskDelay(appData.timeout / portTICK_PERIOD_MS);
             
             // Stop driver and reset error code
-            MLX90614_Stop();
+            MLX90614_DRV_Stop();
             appData.error_code = 0;
             appData.state = APP_STATE_INIT; 
         }
