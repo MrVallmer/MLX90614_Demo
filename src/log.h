@@ -63,7 +63,7 @@ typedef struct {
 
 #define SYSTEM_LOG          1 
 #define I2C_SMB_LOG         2
-#define MLX90614_LOG        10
+#define MLX90614_DRV_LOG        10
 
 
 

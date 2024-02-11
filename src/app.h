@@ -34,8 +34,8 @@
 #include "configuration.h"
 
 #include "log.h"
-#include "i2c_smb.h"
-#include "MLX90614.h"
+#include "I2C_DRV.h"
+#include "MLX90614_DRV.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

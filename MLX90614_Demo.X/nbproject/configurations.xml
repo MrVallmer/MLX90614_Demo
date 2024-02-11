@@ -226,9 +226,9 @@
         </logicalFolder>
       </logicalFolder>
       <itemPath>../src/app.h</itemPath>
-      <itemPath>../src/MLX90614.h</itemPath>
       <itemPath>../src/log.h</itemPath>
-      <itemPath>../src/i2c_smb.h</itemPath>
+      <itemPath>../src/MLX90614_DRV.h</itemPath>
+      <itemPath>../src/I2C_DRV.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -320,9 +320,9 @@
       </logicalFolder>
       <itemPath>../src/main.c</itemPath>
       <itemPath>../src/app.c</itemPath>
-      <itemPath>../src/MLX90614.c</itemPath>
       <itemPath>../src/log.c</itemPath>
-      <itemPath>../src/i2c_smb.c</itemPath>
+      <itemPath>../src/MLX90614_DRV.c</itemPath>
+      <itemPath>../src/I2C_DRV.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -687,7 +687,7 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1000000-2001ffff"/>
         <property key="programmerToGoFilePath"
-                  value="D:/mplab/firmware/MLX90614_Demo/MLX90614_Demo.X/debug/LVLEU05/MLX90614_Demo_ptg"/>
+                  value="C:/Users/miche/MPLABXProjects/MLX90614_Demo/MLX90614_Demo.X/debug/LVLEU05/MLX90614_Demo_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>
