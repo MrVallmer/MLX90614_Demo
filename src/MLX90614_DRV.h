@@ -94,16 +94,20 @@ typedef struct {
 } mlx90614_drv_config_t;
 
 /* ************************************************************************** */
-/// SMB API methods
+/// API methods
 /* ************************************************************************** */
-extern uint8_t MLX90614_DRV_SMBStart (mlx90614_config_t* config);
 extern void MLX90614_DRV_Stop (void);
-extern uint8_t MLX90614_DRV_SMBGetTa (float *ta);
-extern uint8_t MLX90614_DRV_SMBGetT0bj1 (float *tobj);
-extern uint8_t MLX90614_DRV_SMBGetT0bj2 (float *tobj);
-extern uint8_t MLX90614_DRV_SMBGetIRch1 (uint16_t *ir_data);
-extern uint8_t MLX90614_DRV_SMBGetIRch2 (uint16_t *ir_data);
-extern uint64_t MLX90614_DRV_SMBGetID (void);
+
+/* ************************************************************************** */
+/// API methods for SMBus
+/* ************************************************************************** */
+extern uint8_t MLX90614_DRV_SMB_Start (mlx90614_drv_config_t* config);
+extern uint8_t MLX90614_DRV_SMB_GetTa (float *ta);
+extern uint8_t MLX90614_DRV_SMB_GetT0bj1 (float *tobj);
+extern uint8_t MLX90614_DRV_SMB_GetT0bj2 (float *tobj);
+extern uint8_t MLX90614_DRV_SMB_GetIRch1 (uint16_t *ir_data);
+extern uint8_t MLX90614_DRV_SMB_GetIRch2 (uint16_t *ir_data);
+extern uint64_t MLX90614_DRV_SMB_GetID (void);
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus

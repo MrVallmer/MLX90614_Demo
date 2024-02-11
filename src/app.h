@@ -99,7 +99,7 @@ typedef struct
     uint16_t ir2;
     uint8_t error_code;
     
-    mlx90614_config_t mlx90614_config;
+    mlx90614_drv_config_t mlx90614_config;
 
     /* TODO: Define any additional data used by the application. */
 
