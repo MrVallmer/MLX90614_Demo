@@ -229,6 +229,7 @@
       <itemPath>../src/log.h</itemPath>
       <itemPath>../src/MLX90614_DRV.h</itemPath>
       <itemPath>../src/I2C_DRV.h</itemPath>
+      <itemPath>../src/MLX90614_plugin.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -687,7 +688,7 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1000000-2001ffff"/>
         <property key="programmerToGoFilePath"
-                  value="C:/Users/miche/MPLABXProjects/MLX90614_Demo/MLX90614_Demo.X/debug/LVLEU05/MLX90614_Demo_ptg"/>
+                  value="C:/GIT/WBZ451/WBZ451_last/LVLEU05/LVLEU05_1_X_X/LVLEU05_FW.X/debug/LVLEU05/LVLEU05_FW_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>
