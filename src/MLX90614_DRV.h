@@ -80,6 +80,44 @@ typedef enum {
     MLX90614_DRV_IR_SENSOR_DUAL   
 } mlx90614_drv_ir_sensor_setting_t;
 
+/// @brief Temperature channel settings.
+typedef enum {
+    MLX90614_DRV_TA_TOBJ1,
+    MLX90614_DRV_TA_OBJ2,
+    MLX90614_DRV_TOBJ2,
+    MLX90614_DRV_TOBJ1_TOBJ2
+} mlx90614_drv_t_channel_t;
+
+/// @brief Gain settings.
+typedef enum {
+    MLX90614_DRV_GAIN_1,
+    MLX90614_DRV_GAIN_3,
+    MLX90614_DRV_GAIN_6,
+    MLX90614_DRV_GAIN_12_5,
+    MLX90614_DRV_GAIN_25,
+    MLX90614_DRV_GAIN_50,
+    MLX90614_DRV_GAIN_100,
+    MLX90614_DRV_GAIN_200,
+} mlx90614_drv_gain_t;
+
+/// @brief Pwm mode settings.
+typedef enum {
+    MLX90614_DRV_PWM_MODE_EXTENDED,
+    MLX90614_DRV_PWM_MODE_SINGLE,
+} mlx90614_drv_pwm_mode_t;
+
+/// @brief SDA pin mode settings.
+typedef enum {
+    MLX90614_DRV_PPODB_OPEN_DRAIN,
+    MLX90614_DRV_PPODB_PUSH_PULL,
+} mlx90614_drv_ppodb_t;
+
+/// @brief Function mode settings.
+typedef enum {
+    MLX90614_DRV_TRPWMB_PWM_MODE_SELECTED,
+    MLX90614_DRV_TRPWMB_THERMAL_MODE_SELECTED,
+} mlx90614_drv_trpwmb_t;
+
 /// @brief configuration parameters.
 typedef struct {
     int pwr_pin;
@@ -90,7 +128,24 @@ typedef struct {
     int fir_setting;
     int iir_setting;
     int ir_sensor_setting;
-    float emissivity;
+    float emissivity;    
+    bool repeat_sensor_test;   
+    int t_channel;
+    bool ks_sign;
+    int gain;
+    bool kt2_sign;
+    bool sensor_test;    
+    int pwm_mode;
+    bool en_pwm;
+    int ppodb;
+    int trpwmb;
+    int pwm_repetition;
+    int pwm_period;    
+    float to_max;
+    float to_min;
+    float ta_max;
+    float ta_min;
+    
 } mlx90614_drv_config_t;
 
 /* ************************************************************************** */

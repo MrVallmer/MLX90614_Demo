@@ -24,14 +24,30 @@
 #define EMPTY_VALUE             0xFFFF
 
 // Default configuration values
-#define DFT_PWR_PIN             GPIO_PIN_RA7                    // Disable power intitialization
-#define DFT_TNIT_TIMEOUT_MS     840                             // Initialization timeout (depend on configuration setting time)
-#define DFT_SMB_TIMEOUT_MS      27                              // Used for read and write operation (SMB)
-#define DFT_SLAVE_ADDRESS       0x5A
-#define DFT_IIR_SETTING         MLX90614_DRV_IIR_57             // Default setting (IIR = [57%] 7) 
-#define DFT_FIR_SETTING         MLX90614_DRV_FIR_128            // Default setting (FIR = [128] 4)    
-#define DFT_IR_SENSOR_SETTING   MLX90614_DRV_IR_SENSOR_SINGLE   // Dual IR sensor
-#define DFT_EMISSIVITY          0.90                            // Emissivity  dec2hex[ round( 65535 x ?) ]
+#define DFT_PWR_PIN                 GPIO_PIN_RA7                            // Disable power intitialization
+#define DFT_TNIT_TIMEOUT_MS         840                                     // Initialization timeout (depend on configuration setting time)
+#define DFT_SMB_TIMEOUT_MS          27                                      // Used for read and write operation (SMB)
+#define DFT_SLAVE_ADDRESS           0x5A
+#define DFT_IIR_SETTING             MLX90614_DRV_IIR_57                     // Default setting (IIR = [57%] 7) 
+#define DFT_FIR_SETTING             MLX90614_DRV_FIR_128                    // Default setting (FIR = [128] 4)    
+#define DFT_IR_SENSOR_SETTING       MLX90614_DRV_IR_SENSOR_SINGLE           // Dual IR sensor
+#define DFT_EMISSIVITY              0.90                                    // Emissivity  dec2hex[ round( 65535 x ?) ]
+#define DFT_REPEAT_SENSOR_TEST      false                                   // Melexis reserved (change factory calibration))
+#define DFT_T_CHANNEL               MLX90614_DRV_TA_TOBJ1                   // Set on PWM channels what temperature are available
+#define DFT_KS_SIGN                 false                                   // Melexis reserved (change factory calibration)
+#define DFT_GAIN                    MLX90614_DRV_GAIN_200                   // Melexis reserved (change factory calibration)
+#define DFT_KT2_SIGN                false                                   // Melexis reserved (change factory calibration)
+#define DFT_SENSOR_TEST             false                                   // Disable sensor test
+#define DFT_PWM_MODE                MLX90614_DRV_PWM_MODE_SINGLE            // PWM in single mode
+#define DFT_EN_PWM                  false                                   // Disable PWM
+#define DFT_PPODB                   MLX90614_DRV_PPODB_OPEN_DRAIN           // SDA pin configuration (Open Drain or Push Pull)
+#define DFT_TRPWMB                  MLX90614_DRV_TRPWMB_PWM_MODE_SELECTED   // Thermal relay selection (can be selected only if PWM is enable)
+#define DFT_PWM_REPETITION          1                                       // Number of repetition for a data in pwm mode
+#define DFT_PWM_PERIOD              1                                       // Setting for a repetition period
+#define DFT_TO_MAX                  100                                     // Max T object range 100° = ((T + 273,15) * 100)
+#define DFT_TO_MIN                  0                                       // Min T object range 0° = ((T + 273,15) * 100)
+#define DFT_TA_MAX                  100                                     // Mac T ambient range 100° = ((T + 38,2) / 100)
+#define DFT_TA_MIN                  0                                       // Min T ambinet range 100° = ((T + 38,2) / 100)
 
 /* ************************************************************************** */
 /// TODO: SMB mode Definitions
@@ -135,21 +151,21 @@ bool    MLX90614_DRV_SMB_Set_ConfigRegister1 (uint16_t mask, int shift, uint16_t
 bool    MLX90614_DRV_SMB_Set_FIR (uint16_t value);
 bool    MLX90614_DRV_SMB_Set_IIR (uint16_t value);
 bool    MLX90614_DRV_SMB_Set_IRsensor (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_RepeatSensorTest (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_RepeatSensorTest (bool value);
 bool    MLX90614_DRV_SMB_Set_Tchannel (uint16_t value);
 bool    MLX90614_DRV_SMB_Set_KsSign (uint16_t value);
 bool    MLX90614_DRV_SMB_Set_Gain (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_Kt2Sign (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_SensorTest (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_Kt2Sign (bool value);
+bool    MLX90614_DRV_SMB_Set_SensorTest (bool value);
 bool    MLX90614_DRV_SMB_Set_Emissivity (float value);
 bool    MLX90614_DRV_SMB_Set_SlaveAddress (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_TOmax (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_TOmin (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_TAmax (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_TAmin (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_TOmax (float value);
+bool    MLX90614_DRV_SMB_Set_TOmin (float value);
+bool    MLX90614_DRV_SMB_Set_TAmax (float value);
+bool    MLX90614_DRV_SMB_Set_TAmin (float value);
 bool    MLX90614_DRV_SMB_Set_PWMCTRL (uint16_t mask, int shift, uint16_t value);
 bool    MLX90614_DRV_SMB_Set_PWM_mode (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_EN_PWM (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_EN_PWM (bool value);
 bool    MLX90614_DRV_SMB_Set_PPODB (uint16_t value);
 bool    MLX90614_DRV_SMB_Set_TRPWMB (uint16_t value);
 bool    MLX90614_DRV_SMB_Set_PWMrepetition (uint16_t value);
@@ -220,7 +236,23 @@ void MLX90614_DRV_dft_config (void) {
     config.fir_setting = DFT_FIR_SETTING;
     config.iir_setting = DFT_IIR_SETTING;
     config.ir_sensor_setting = DFT_IR_SENSOR_SETTING;
-    config.emissivity = DFT_EMISSIVITY;
+    config.emissivity = DFT_EMISSIVITY;    
+    config.repeat_sensor_test = DFT_REPEAT_SENSOR_TEST;   
+    config.t_channel = DFT_T_CHANNEL;
+    config.ks_sign = DFT_KS_SIGN;
+    config.gain = DFT_GAIN;
+    config.kt2_sign = DFT_KT2_SIGN;
+    config.sensor_test = DFT_SENSOR_TEST;    
+    config.pwm_mode = DFT_PWM_MODE;
+    config.en_pwm = DFT_EN_PWM;
+    config.ppodb = DFT_PPODB;
+    config.trpwmb = DFT_TRPWMB;
+    config.pwm_repetition = DFT_PWM_REPETITION;
+    config.pwm_period = DFT_PWM_MODE;    
+    config.to_max = DFT_TO_MAX;
+    config.to_min = DFT_TO_MIN;
+    config.ta_max = DFT_TA_MAX;
+    config.ta_min = DFT_TA_MIN;     
 }
 
 /// @brief Load the user configuration.
@@ -235,8 +267,48 @@ void MLX90614_DRV_config (mlx90614_drv_config_t *_config) {
     config.iir_setting = _config->iir_setting & 0x07;
     config.fir_setting = _config->fir_setting & 0x07;
     config.init_timeout_ms = _config->init_timeout_ms;
-    config.ir_sensor_setting = _config->ir_sensor_setting;
-    config.emissivity = _config->emissivity;
+    config.ir_sensor_setting = _config->ir_sensor_setting & 0x01;
+    config.emissivity = _config->emissivity;    
+    config.repeat_sensor_test = _config->repeat_sensor_test;   
+    config.t_channel = _config->t_channel & 0x03;
+    config.ks_sign = _config->ks_sign;
+    config.gain = _config->gain & 0x07;
+    config.kt2_sign = _config->kt2_sign;
+    config.sensor_test = _config->sensor_test;    
+    config.pwm_mode = _config->pwm_mode & 0x01;
+    config.en_pwm = _config->en_pwm;
+    config.ppodb = _config->ppodb & 0x01;
+    config.trpwmb = _config->trpwmb & 0x01;
+    config.pwm_repetition = _config->pwm_repetition & 0x1F;
+    config.pwm_period = _config->pwm_period & 0x7F;    
+    config.to_max = _config->to_max;
+    config.to_min = _config->to_min;
+    config.ta_max = _config->ta_max;
+    config.ta_min = _config->ta_min;  
+    
+    // Check temperature range
+    if (config.ta_max > 125)
+        config.ta_max = 125;    
+    if (config.ta_max < -38.2)
+        config.ta_max = -38.2;
+    
+    // Check temperature range
+    if (config.ta_min > 125)
+        config.ta_min = 125;    
+    if (config.ta_min < -38.2)
+        config.ta_min = -38.2;
+    
+    // Check temperature range
+    if (config.to_max > 382.2)
+        config.to_max = 382.2;    
+    if (config.to_max < -273.15)
+        config.to_max = -273,15;
+    
+    // Check temperature range
+    if (config.to_min > 382.2)
+        config.to_min = 382.2;    
+    if (config.to_min < -273.15)
+        config.to_min = -273,15;    
 }
 
 /* ************************************************************************** */
@@ -498,10 +570,10 @@ bool MLX90614_DRV_SMB_Set_IRsensor (uint16_t value) {
 }
 
 /// @brief Set the Repeat sensor test value in EEPROM Config Register1
-bool MLX90614_DRV_SMB_Set_RepeatSensorTest (uint16_t value) {
+bool MLX90614_DRV_SMB_Set_RepeatSensorTest (bool enable) {
 	
     uint16_t old_value = (eeprom_table.config_register_1 & 0x0008) >> 3;
-    value = value & 0x01;
+    uint16_t value = (uint16_t)(enable);
 
     // Compare old configuration with new configuration
     if (old_value != value)    
@@ -562,10 +634,10 @@ bool MLX90614_DRV_SMB_Set_Gain (uint16_t value) {
 }
 
 /// @brief Set the Kt2 sign value in EEPROM Config Register1
-bool MLX90614_DRV_SMB_Set_Kt2Sign (uint16_t value) {
+bool MLX90614_DRV_SMB_Set_Kt2Sign (bool sign) {
 	
     uint16_t old_value = (eeprom_table.config_register_1 & 0x4000) >> 14;
-    value = value & 0x01;
+    uint16_t value = (uint16_t)(sign);
 
     // Compare old configuration with new configuration
     if (old_value != value)    
@@ -578,10 +650,10 @@ bool MLX90614_DRV_SMB_Set_Kt2Sign (uint16_t value) {
 }
 
 /// @brief Set the sensor test value in EEPROM Config Register1
-bool MLX90614_DRV_SMB_Set_SensorTest (uint16_t value) {
+bool MLX90614_DRV_SMB_Set_SensorTest (bool enable) {
 	
     uint16_t old_value = (eeprom_table.config_register_1 & 0x8000) >> 15;
-    value = value & 0x01;
+    uint16_t value = (uint16_t)(enable);
 
     // Compare old configuration with new configuration
     if (old_value != value)    
@@ -635,8 +707,15 @@ bool MLX90614_DRV_SMB_Set_SlaveAddress (uint16_t value) {
     return true;
 }
 
-/// @brief Write the EEPROM TO max register
-bool MLX90614_DRV_SMB_Set_TOmax (uint16_t value) {
+/// @brief Write the EEPROM TO max register (tempearature in celsius) (-273,15 <> 382.2)
+bool MLX90614_DRV_SMB_Set_TOmax (float temperature) {
+    
+    if (temperature > 382.2)
+        temperature = 382.2;    
+    if (temperature < -273.15)
+        temperature = -273,15;
+    
+    uint16_t value = (uint16_t)((temperature + 273.15) * 100);
     
     if (eeprom_table.to_max == value) 
         return true;
@@ -650,8 +729,15 @@ bool MLX90614_DRV_SMB_Set_TOmax (uint16_t value) {
     return true;
 }
 
-/// @brief Write the EEPROM TO min register
-bool MLX90614_DRV_SMB_Set_TOmin (uint16_t value) {
+/// @brief Write the EEPROM TO min register (temperature in celsius) (-273,15 <> 382.2)
+bool MLX90614_DRV_SMB_Set_TOmin (float temperature) {
+    
+    if (temperature > 382.2)
+        temperature = 382.2;    
+    if (temperature < -273.15)
+        temperature = -273,15;
+    
+    uint16_t value = (uint16_t)((temperature + 273.15) * 100);
     
     if (eeprom_table.to_min == value) 
         return true;
@@ -664,9 +750,16 @@ bool MLX90614_DRV_SMB_Set_TOmin (uint16_t value) {
     return true;
 }
 
-/// @brief Write the EEPROM TA max in TA range register
-bool MLX90614_DRV_SMB_Set_TAmax (uint16_t value) {
+/// @brief Write the EEPROM TA max in TA range register (-38,2 <> 125)
+bool MLX90614_DRV_SMB_Set_TAmax (float temperature) {
 	
+    if (temperature > 125)
+        temperature = 125;    
+    if (temperature < -38.2)
+        temperature = -38.2;
+    
+    uint16_t value = (uint16_t)((temperature + 38.2) * 1.5625);
+    
     value = value & 0x00FF;
 	uint16_t data = eeprom_table.ta_range & 0x00FF;
     data = data | ((value & 0x00FF) << 8);
@@ -683,8 +776,15 @@ bool MLX90614_DRV_SMB_Set_TAmax (uint16_t value) {
     return true;
 }
 
-/// @brief Write the EEPROM TA min in TA range register
-bool MLX90614_DRV_SMB_Set_TAmin (uint16_t value) {
+/// @brief Write the EEPROM TA min in TA range register (-38,2 <> 125)
+bool MLX90614_DRV_SMB_Set_TAmin (float temperature) {
+	
+    if (temperature > 125)
+        temperature = 125;    
+    if (temperature < -38.2)
+        temperature = -38.2;
+    
+    uint16_t value = (uint16_t)((temperature + 38.2) * 1.5625);
     
     value = value & 0x00FF;
 	uint16_t data = eeprom_table.ta_range & 0xFF00;
@@ -728,10 +828,10 @@ bool MLX90614_DRV_SMB_Set_PWM_mode (uint16_t value) {
 }
 
 /// @brief Set the EN_PWM value in EEPROM PWMCTRL
-bool MLX90614_DRV_SMB_Set_EN_PWM (uint16_t value) {
+bool MLX90614_DRV_SMB_Set_EN_PWM (bool enable) {
 	
     uint16_t old_value = (eeprom_table.pwmctrl & 0x0002) >> 1;
-    value = value & 0x0001;
+    uint16_t value = (uint16_t)(enable);
 
     // Compare old configuration with new configuration
     if (old_value != value)    
@@ -831,7 +931,23 @@ uint8_t MLX90614_DRV_SMB_Start (mlx90614_drv_config_t* _config) {
     if (bValid) bValid = MLX90614_DRV_SMB_Set_FIR(config.fir_setting);
     if (bValid) bValid = MLX90614_DRV_SMB_Set_IIR(config.iir_setting);
     if (bValid) bValid = MLX90614_DRV_SMB_Set_IRsensor(config.ir_sensor_setting);
-    if (bValid) bValid = MLX90614_DRV_SMB_Set_Emissivity(config.emissivity);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_RepeatSensorTest(config.repeat_sensor_test);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_Tchannel(config.t_channel);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_KsSign(config.ks_sign);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_Kt2Sign(config.kt2_sign);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_SensorTest(config.sensor_test);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_Gain(config.gain);    
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_PWM_mode(config.pwm_mode);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_EN_PWM(config.en_pwm);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_PPODB(config.ppodb);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_TRPWMB(config.trpwmb);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_PWMrepetition(config.pwm_repetition);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_PWMperiod(config.pwm_period);    
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_TOmax(config.to_max);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_TOmin(config.to_min);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_TAmax(config.ta_max);
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_TAmin(config.ta_min);    
+    if (bValid) bValid = MLX90614_DRV_SMB_Set_Emissivity(config.emissivity);   
     
     if (!bValid)
         return MLX90614_DRV_ERROR_EEPROM_WRITE;
