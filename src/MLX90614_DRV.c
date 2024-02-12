@@ -136,22 +136,22 @@ bool    MLX90614_DRV_SMB_Set_FIR (uint16_t value);
 bool    MLX90614_DRV_SMB_Set_IIR (uint16_t value);
 bool    MLX90614_DRV_SMB_Set_IRsensor (uint16_t value);
 bool    MLX90614_DRV_SMB_Set_RepeatSensorTest (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_PWM_channel_selection (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_Ks_sign (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_Tchannel (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_KsSign (uint16_t value);
 bool    MLX90614_DRV_SMB_Set_Gain (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_Kt2_sign (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_Enable_sensor_test (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_Kt2Sign (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_SensorTest (uint16_t value);
 bool    MLX90614_DRV_SMB_Set_Emissivity (float value);
-bool    MLX90614_DRV_SMB_Set_Slave_Address (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_TO_max (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_TO_min (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_TA_max (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_TA_min (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_PWMConfigRegister (uint16_t mask, int shift, uint16_t value);
+bool    MLX90614_DRV_SMB_Set_SlaveAddress (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_TOmax (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_TOmin (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_TAmax (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_TAmin (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_PWMCTRL (uint16_t mask, int shift, uint16_t value);
 bool    MLX90614_DRV_SMB_Set_PWM_mode (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_PWM_enable (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_SDA_pin_conf (uint16_t value);
-bool    MLX90614_DRV_SMB_Set_ThermalRelay (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_EN_PWM (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_PPODB (uint16_t value);
+bool    MLX90614_DRV_SMB_Set_TRPWMB (uint16_t value);
 bool    MLX90614_DRV_SMB_Set_PWMrepetition (uint16_t value);
 bool    MLX90614_DRV_SMB_Set_PWMperiod (uint16_t value);
 
@@ -225,18 +225,18 @@ void MLX90614_DRV_dft_config (void) {
 
 /// @brief Load the user configuration.
 /// @param config user configuration.
-void MLX90614_DRV_config (mlx90614_drv_config_t *config) {
+void MLX90614_DRV_config (mlx90614_drv_config_t *_config) {
 
     LOG_print_debug(MLX90614_DRV_LOG, "load user configuration");
-    config.pwr_pin = config->pwr_pin;
-    config.slave_address = config->slave_address & 0x7F;
-    config.read_timeout_ms = config->read_timeout_ms;
-    config.write_timeout_ms = config->write_timeout_ms;
-    config.iir_setting = config->iir_setting & 0x07;
-    config.fir_setting = config->fir_setting & 0x07;
-    config.init_timeout_ms = config->init_timeout_ms;
-    config.ir_sensor_setting = config->ir_sensor_setting;
-    config.emissivity = config->emissivity;
+    config.pwr_pin = _config->pwr_pin;
+    config.slave_address = _config->slave_address & 0x7F;
+    config.read_timeout_ms = _config->read_timeout_ms;
+    config.write_timeout_ms = _config->write_timeout_ms;
+    config.iir_setting = _config->iir_setting & 0x07;
+    config.fir_setting = _config->fir_setting & 0x07;
+    config.init_timeout_ms = _config->init_timeout_ms;
+    config.ir_sensor_setting = _config->ir_sensor_setting;
+    config.emissivity = _config->emissivity;
 }
 
 /* ************************************************************************** */
@@ -513,8 +513,8 @@ bool MLX90614_DRV_SMB_Set_RepeatSensorTest (uint16_t value) {
     return true;
 }
 
-/// @brief Set the PWM channel selection value in EEPROM configuration register.
-bool MLX90614_DRV_SMB_Set_PWM_channel_selection (uint16_t value) {
+/// @brief Set the T channel value in EEPROM Config Register1
+bool MLX90614_DRV_SMB_Set_Tchannel (uint16_t value) {
 	
     uint16_t old_value = (eeprom_table.config_register_1 & 0x0030) >> 4;
     value = value & 0x03;
@@ -522,15 +522,15 @@ bool MLX90614_DRV_SMB_Set_PWM_channel_selection (uint16_t value) {
     // Compare old configuration with new configuration
     if (old_value != value)    
         if (MLX90614_DRV_SMB_Set_ConfigRegister1(0xFFCF, 4, value)) {
-            LOG_print_info(MLX90614_DRV_LOG, "set pwm channel selection with value %d", value);
+            LOG_print_info(MLX90614_DRV_LOG, "set T_channel with value %d", value);
         } else
             return false;
   
     return true;
 }
 
-/// @brief Set the Ks sign value in EEPROM configuration register.
-bool MLX90614_DRV_SMB_Set_Ks_sign (uint16_t value) {
+/// @brief Set the Ks sign value in EEPROM Config Register1
+bool MLX90614_DRV_SMB_Set_KsSign (uint16_t value) {
 	
     uint16_t old_value = (eeprom_table.config_register_1 & 0x0080) >> 7;
     value = value & 0x01;
@@ -538,14 +538,14 @@ bool MLX90614_DRV_SMB_Set_Ks_sign (uint16_t value) {
     // Compare old configuration with new configuration
     if (old_value != value)    
         if (MLX90614_DRV_SMB_Set_ConfigRegister1(0xFF7F, 7, value)) {
-            LOG_print_info(MLX90614_DRV_LOG, "set ks sign with value %d", value);
+            LOG_print_info(MLX90614_DRV_LOG, "set ks_sign with value %d", value);
         } else
             return false;
   
     return true;
 }
 
-/// @brief Set the gain value in EEPROM configuration register.
+/// @brief Set the gain value in EEPROM Config Register1
 bool MLX90614_DRV_SMB_Set_Gain (uint16_t value) {
 	
     uint16_t old_value = (eeprom_table.config_register_1 & 0x3800) >> 11;
@@ -561,8 +561,8 @@ bool MLX90614_DRV_SMB_Set_Gain (uint16_t value) {
     return true;
 }
 
-/// @brief Set the Kt2 sign value in EEPROM configuration register.
-bool MLX90614_DRV_SMB_Set_Kt2_sign (uint16_t value) {
+/// @brief Set the Kt2 sign value in EEPROM Config Register1
+bool MLX90614_DRV_SMB_Set_Kt2Sign (uint16_t value) {
 	
     uint16_t old_value = (eeprom_table.config_register_1 & 0x4000) >> 14;
     value = value & 0x01;
@@ -570,15 +570,15 @@ bool MLX90614_DRV_SMB_Set_Kt2_sign (uint16_t value) {
     // Compare old configuration with new configuration
     if (old_value != value)    
         if (MLX90614_DRV_SMB_Set_ConfigRegister1(0xBFFF, 14, value)) {
-            LOG_print_info(MLX90614_DRV_LOG, "set kt2 sign with value %d", value);
+            LOG_print_info(MLX90614_DRV_LOG, "set kt2_sign with value %d", value);
         } else
             return false;
   
     return true;
 }
 
-/// @brief Set the enable sensor test value in EEPROM configuration register.
-bool MLX90614_DRV_SMB_Set_Enable_sensor_test (uint16_t value) {
+/// @brief Set the sensor test value in EEPROM Config Register1
+bool MLX90614_DRV_SMB_Set_SensorTest (uint16_t value) {
 	
     uint16_t old_value = (eeprom_table.config_register_1 & 0x8000) >> 15;
     value = value & 0x01;
@@ -586,7 +586,7 @@ bool MLX90614_DRV_SMB_Set_Enable_sensor_test (uint16_t value) {
     // Compare old configuration with new configuration
     if (old_value != value)    
         if (MLX90614_DRV_SMB_Set_ConfigRegister1(0x7FFF, 15, value)) {
-            LOG_print_info(MLX90614_DRV_LOG, "set the enable sensor test with value %d", value);
+            LOG_print_info(MLX90614_DRV_LOG, "set the sensor_test with value %d", value);
         } else
             return false;
   
@@ -621,22 +621,22 @@ bool MLX90614_DRV_SMB_Set_Emissivity (float value) {
 }
 
 /// @brief Write the EEPROM slave address register
-bool MLX90614_DRV_SMB_Set_Slave_Address (uint16_t value) {
+bool MLX90614_DRV_SMB_Set_SlaveAddress (uint16_t value) {
     
     if (eeprom_table.smb_address == value) 
         return true;
     
     if (!MLX90614_DRV_SMB_Set_Register(value, SMB_EEPROM_SA_REG_ADDR, &eeprom_table.smb_address)){
-        LOG_print_error(MLX90614_DRV_LOG, "set slave address with value %d failed", value);
+        LOG_print_error(MLX90614_DRV_LOG, "set slave_address with value %d failed", value);
         return false;
     }
 
-    LOG_print_info(MLX90614_DRV_LOG, "set slave address with value %d", value);
+    LOG_print_info(MLX90614_DRV_LOG, "set slave_address with value %d", value);
     return true;
 }
 
 /// @brief Write the EEPROM TO max register
-bool MLX90614_DRV_SMB_Set_TO_max (uint16_t value) {
+bool MLX90614_DRV_SMB_Set_TOmax (uint16_t value) {
     
     if (eeprom_table.to_max == value) 
         return true;
@@ -651,7 +651,7 @@ bool MLX90614_DRV_SMB_Set_TO_max (uint16_t value) {
 }
 
 /// @brief Write the EEPROM TO min register
-bool MLX90614_DRV_SMB_Set_TO_min (uint16_t value) {
+bool MLX90614_DRV_SMB_Set_TOmin (uint16_t value) {
     
     if (eeprom_table.to_min == value) 
         return true;
@@ -664,8 +664,8 @@ bool MLX90614_DRV_SMB_Set_TO_min (uint16_t value) {
     return true;
 }
 
-/// @brief Write the EEPROM TO max register
-bool MLX90614_DRV_SMB_Set_TA_max (uint16_t value) {
+/// @brief Write the EEPROM TA max in TA range register
+bool MLX90614_DRV_SMB_Set_TAmax (uint16_t value) {
 	
     value = value & 0x00FF;
 	uint16_t data = eeprom_table.ta_range & 0x00FF;
@@ -683,8 +683,8 @@ bool MLX90614_DRV_SMB_Set_TA_max (uint16_t value) {
     return true;
 }
 
-/// @brief Write the EEPROM TO min register
-bool MLX90614_DRV_SMB_Set_TA_min (uint16_t value) {
+/// @brief Write the EEPROM TA min in TA range register
+bool MLX90614_DRV_SMB_Set_TAmin (uint16_t value) {
     
     value = value & 0x00FF;
 	uint16_t data = eeprom_table.ta_range & 0xFF00;
@@ -702,8 +702,8 @@ bool MLX90614_DRV_SMB_Set_TA_min (uint16_t value) {
     return true;
 }
 
-/// @brief Write the EEPROM pwm configuration register using mask and shift value
-bool MLX90614_DRV_SMB_Set_PWMConfigRegister (uint16_t mask, int shift, uint16_t value) {
+/// @brief Write the EEPROM PWMCTRL
+bool MLX90614_DRV_SMB_Set_PWMCTRL (uint16_t mask, int shift, uint16_t value) {
         
     uint16_t data = eeprom_table.pwmctrl & mask;
     data = data | ((value & (~mask & 0xFFFF)) << shift);
@@ -711,7 +711,7 @@ bool MLX90614_DRV_SMB_Set_PWMConfigRegister (uint16_t mask, int shift, uint16_t 
     return MLX90614_DRV_SMB_Set_Register(data, SMB_EEPROM_PWMCTRL_REG_ADDR, &eeprom_table.pwmctrl);
 }
 
-/// @brief Set PWM mode value in EEPROM PWM configuration register.
+/// @brief Set PWM mode value in EEPROM PWMCTRL
 bool MLX90614_DRV_SMB_Set_PWM_mode (uint16_t value) {
 	
     uint16_t old_value = (eeprom_table.pwmctrl & 0x0001) >> 0;
@@ -719,7 +719,7 @@ bool MLX90614_DRV_SMB_Set_PWM_mode (uint16_t value) {
 
     // Compare old configuration with new configuration
     if (old_value != value)    
-        if (MLX90614_DRV_SMB_Set_PWMConfigRegister(0xFFFE, 0, value)) {
+        if (MLX90614_DRV_SMB_Set_PWMCTRL(0xFFFE, 0, value)) {
             LOG_print_info(MLX90614_DRV_LOG, "set the pwm mode with value %d", value);
         } else
             return false;
@@ -727,55 +727,55 @@ bool MLX90614_DRV_SMB_Set_PWM_mode (uint16_t value) {
     return true;
 }
 
-/// @brief Set the enable PWM value in EEPROM PWM configuration register.
-bool MLX90614_DRV_SMB_Set_PWM_enable (uint16_t value) {
+/// @brief Set the EN_PWM value in EEPROM PWMCTRL
+bool MLX90614_DRV_SMB_Set_EN_PWM (uint16_t value) {
 	
     uint16_t old_value = (eeprom_table.pwmctrl & 0x0002) >> 1;
     value = value & 0x0001;
 
     // Compare old configuration with new configuration
     if (old_value != value)    
-        if (MLX90614_DRV_SMB_Set_PWMConfigRegister(0xFFFD, 1, value)) {
-            LOG_print_info(MLX90614_DRV_LOG, "set the pwm enable with value %d", value);
+        if (MLX90614_DRV_SMB_Set_PWMCTRL(0xFFFD, 1, value)) {
+            LOG_print_info(MLX90614_DRV_LOG, "set EN_PWM with value %d", value);
         } else
             return false;
   
     return true;
 }
 
-/// @brief Set SDA pin configuration in EEPROM PWM configuration register.
-bool MLX90614_DRV_SMB_Set_SDA_pin_conf (uint16_t value) {
+/// @brief Set PPODB in EEPROM PWMCTRL
+bool MLX90614_DRV_SMB_Set_PPODB (uint16_t value) {
 	
     uint16_t old_value = (eeprom_table.pwmctrl & 0x0004) >> 2;
     value = value & 0x0001;
 
     // Compare old configuration with new configuration
     if (old_value != value)    
-        if (MLX90614_DRV_SMB_Set_PWMConfigRegister(0xFFFB, 2, value)) {
-            LOG_print_info(MLX90614_DRV_LOG, "set the sda pin configuration with value %d", value);
+        if (MLX90614_DRV_SMB_Set_PWMCTRL(0xFFFB, 2, value)) {
+            LOG_print_info(MLX90614_DRV_LOG, "set PPODB with value %d", value);
         } else
             return false;
   
     return true;
 }
 
-/// @brief Set Thermal Relay in EEPROM PWM configuration register.
-bool MLX90614_DRV_SMB_Set_ThermalRelay (uint16_t value) {
+/// @brief Set TRPWMB in EEPROM PWM PWMCTRL
+bool MLX90614_DRV_SMB_Set_TRPWMB (uint16_t value) {
 	
     uint16_t old_value = (eeprom_table.pwmctrl & 0x0008) >> 3;
     value = value & 0x0001;
 
     // Compare old configuration with new configuration
     if (old_value != value)    
-        if (MLX90614_DRV_SMB_Set_PWMConfigRegister(0xFFF7, 3, value)) {
-            LOG_print_info(MLX90614_DRV_LOG, "set the thermal relay with value %d", value);
+        if (MLX90614_DRV_SMB_Set_PWMCTRL(0xFFF7, 3, value)) {
+            LOG_print_info(MLX90614_DRV_LOG, "set TRPWMB with value %d", value);
         } else
             return false;
   
     return true;
 }
 
-/// @brief Set PWM repetition in EEPROM PWM configuration register.
+/// @brief Set PWM repetition in EEPROM PWM PWMCTRL
 bool MLX90614_DRV_SMB_Set_PWMrepetition (uint16_t value) {
 	
     uint16_t old_value = (eeprom_table.pwmctrl & 0x01F0) >> 4;
@@ -783,15 +783,15 @@ bool MLX90614_DRV_SMB_Set_PWMrepetition (uint16_t value) {
 
     // Compare old configuration with new configuration
     if (old_value != value)    
-        if (MLX90614_DRV_SMB_Set_PWMConfigRegister(0xFE0F, 4, value)) {
-            LOG_print_info(MLX90614_DRV_LOG, "set the pwm repetition with value %d", value);
+        if (MLX90614_DRV_SMB_Set_PWMCTRL(0xFE0F, 4, value)) {
+            LOG_print_info(MLX90614_DRV_LOG, "set the pwm_repetition with value %d", value);
         } else
             return false;
   
     return true;
 }
 
-/// @brief Set PWM period in EEPROM PWM configuration register.
+/// @brief Set PWM period in EEPROM PWM PWMCTRL
 bool MLX90614_DRV_SMB_Set_PWMperiod (uint16_t value) {
 	
     uint16_t old_value = (eeprom_table.pwmctrl & 0xFE00) >> 9;
@@ -799,8 +799,8 @@ bool MLX90614_DRV_SMB_Set_PWMperiod (uint16_t value) {
 
     // Compare old configuration with new configuration
     if (old_value != value)    
-        if (MLX90614_DRV_SMB_Set_PWMConfigRegister(0x0100, 9, value)) {
-            LOG_print_info(MLX90614_DRV_LOG, "set the pwm period with value %d", value);
+        if (MLX90614_DRV_SMB_Set_PWMCTRL(0x0100, 9, value)) {
+            LOG_print_info(MLX90614_DRV_LOG, "set the pwm_period with value %d", value);
         } else
             return false;
   
@@ -813,12 +813,12 @@ bool MLX90614_DRV_SMB_Set_PWMperiod (uint16_t value) {
 
 /// @brief Start driver operation with SMBus
 /// @return error code
-uint8_t MLX90614_DRV_SMB_Start (mlx90614_drv_config_t* config) {
+uint8_t MLX90614_DRV_SMB_Start (mlx90614_drv_config_t* _config) {
 	
     bool bValid = true;
     
-    // Initialize Driver and power up
-    MLX90614_DRV_init(config);    
+    // Initialize Driver (power up)
+    MLX90614_DRV_init(_config);    
     MLX90614_DRV_powerup();
 
     // Synchronize driver with internal MLX90614 memory (dump RAM and EEPROM memory)
