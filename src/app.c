@@ -114,7 +114,7 @@ void APP_Initialize ( void )
     appData.mlx90614_config.emissivity = 0.80;
     
     // Initialize logger
-    LOG_initialize (true);  
+    LOG_initialize(true);
     
     // Initialize application
     appData.state = APP_STATE_INIT;
@@ -143,7 +143,7 @@ void APP_Tasks ( void )
             
             LOG_print_info(SYSTEM_LOG, "System initialization (I2C, MLX90614) ... \n\r");
             appData.error_code = I2C_DRV_Start() ? 0x00 : 0xFF;                
-            appData.error_code |= MLX90614_DRV_SMB_Start(&appData.mlx90614_config);
+            appData.error_code |= MLX90614_DRV_SMB_Start( NULL );
             
             if (appData.error_code > 0)
                 appData.state = APP_STATE_ERROR;

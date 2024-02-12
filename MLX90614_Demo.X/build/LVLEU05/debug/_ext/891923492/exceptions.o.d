@@ -137,11 +137,15 @@ build/LVLEU05/debug/_ext/891923492/exceptions.o: \
  ../src/third_party/rtos/FreeRTOS/Source/include/task.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/semphr.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/queue.h \
- ../src/config/LVLEU05/system/debug/sys_debug.h ../src/app.h ../src/log.h \
- ../src/config/LVLEU05/system/time/sys_time.h ../src/I2C_DRV.h \
- ../src/config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom2_i2c_master.h \
+ ../src/config/LVLEU05/system/debug/sys_debug.h ../src/app.h \
+ ../src/app/service/log.h ../src/app/service/clock.h \
+ ../src/config/LVLEU05/system/time/sys_time.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/semphr.h \
- ../src/MLX90614_DRV.h ../src/config/LVLEU05/peripheral/gpio/plib_gpio.h
+ ../src/app/service/clock.h ../src/app/driver/I2C_DRV.h \
+ ../src/config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom2_i2c_master.h \
+ ../src/app/service/log.h ../src/app/driver/MLX90614_DRV.h \
+ ../src/config/LVLEU05/peripheral/gpio/plib_gpio.h \
+ ../src/app/driver/I2C_DRV.h
 
 ../src/config/LVLEU05/configuration.h:
 
@@ -427,16 +431,24 @@ build/LVLEU05/debug/_ext/891923492/exceptions.o: \
 
 ../src/app.h:
 
-../src/log.h:
+../src/app/service/log.h:
+
+../src/app/service/clock.h:
 
 ../src/config/LVLEU05/system/time/sys_time.h:
 
-../src/I2C_DRV.h:
+../src/third_party/rtos/FreeRTOS/Source/include/semphr.h:
+
+../src/app/service/clock.h:
+
+../src/app/driver/I2C_DRV.h:
 
 ../src/config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom2_i2c_master.h:
 
-../src/third_party/rtos/FreeRTOS/Source/include/semphr.h:
+../src/app/service/log.h:
 
-../src/MLX90614_DRV.h:
+../src/app/driver/MLX90614_DRV.h:
 
 ../src/config/LVLEU05/peripheral/gpio/plib_gpio.h:
+
+../src/app/driver/I2C_DRV.h:

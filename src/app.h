@@ -33,9 +33,10 @@
 #include <stdlib.h>
 #include "configuration.h"
 
-#include "log.h"
-#include "I2C_DRV.h"
-#include "MLX90614_DRV.h"
+#include "app/service/log.h"
+#include "app/service/clock.h"
+#include "app/driver/I2C_DRV.h"
+#include "app/driver/MLX90614_DRV.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

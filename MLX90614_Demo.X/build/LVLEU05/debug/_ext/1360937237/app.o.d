@@ -93,7 +93,8 @@ build/LVLEU05/debug/_ext/1360937237/app.o: ../src/app.c ../src/app.h \
  ../src/packs/WBZ451_DFP/pio/wbz451.h \
  ../src/config/LVLEU05/device_cache.h \
  ../src/config/LVLEU05/toolchain_specifics.h \
- ../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h ../src/log.h \
+ ../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h \
+ ../src/app/service/log.h ../src/app/service/clock.h \
  ../src/config/LVLEU05/system/time/sys_time.h \
  ../src/config/LVLEU05/system/system.h \
  ../src/config/LVLEU05/system/system_common.h \
@@ -102,9 +103,7 @@ build/LVLEU05/debug/_ext/1360937237/app.o: ../src/app.c ../src/app.h \
  ../src/config/LVLEU05/system/time/sys_time_definitions.h \
  ../src/config/LVLEU05/system/int/sys_int.h \
  ../src/config/LVLEU05/device.h \
- ../src/config/LVLEU05/system/int/sys_int_mapping.h ../src/I2C_DRV.h \
- ../src/config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom2_i2c_master.h \
- ../src/config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom_i2c_master_common.h \
+ ../src/config/LVLEU05/system/int/sys_int_mapping.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/FreeRTOS.h \
  ../src/config/LVLEU05/FreeRTOSConfig.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/projdefs.h \
@@ -117,8 +116,12 @@ build/LVLEU05/debug/_ext/1360937237/app.o: ../src/app.c ../src/app.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/semphr.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/queue.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/task.h \
- ../src/MLX90614_DRV.h ../src/config/LVLEU05/peripheral/gpio/plib_gpio.h \
- ../src/config/LVLEU05/definitions.h \
+ ../src/app/service/clock.h ../src/app/driver/I2C_DRV.h \
+ ../src/config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom2_i2c_master.h \
+ ../src/config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom_i2c_master_common.h \
+ ../src/app/service/log.h ../src/app/driver/MLX90614_DRV.h \
+ ../src/config/LVLEU05/peripheral/gpio/plib_gpio.h \
+ ../src/app/driver/I2C_DRV.h ../src/config/LVLEU05/definitions.h \
  ../src/config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom2_i2c_master.h \
  ../src/config/LVLEU05/peripheral/sercom/usart/plib_sercom0_usart.h \
  ../src/config/LVLEU05/peripheral/sercom/usart/plib_sercom_usart_common.h \
@@ -337,7 +340,9 @@ build/LVLEU05/debug/_ext/1360937237/app.o: ../src/app.c ../src/app.h \
 
 ../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h:
 
-../src/log.h:
+../src/app/service/log.h:
+
+../src/app/service/clock.h:
 
 ../src/config/LVLEU05/system/time/sys_time.h:
 
@@ -356,12 +361,6 @@ build/LVLEU05/debug/_ext/1360937237/app.o: ../src/app.c ../src/app.h \
 ../src/config/LVLEU05/device.h:
 
 ../src/config/LVLEU05/system/int/sys_int_mapping.h:
-
-../src/I2C_DRV.h:
-
-../src/config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom2_i2c_master.h:
-
-../src/config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom_i2c_master_common.h:
 
 ../src/third_party/rtos/FreeRTOS/Source/include/FreeRTOS.h:
 
@@ -387,9 +386,21 @@ build/LVLEU05/debug/_ext/1360937237/app.o: ../src/app.c ../src/app.h \
 
 ../src/third_party/rtos/FreeRTOS/Source/include/task.h:
 
-../src/MLX90614_DRV.h:
+../src/app/service/clock.h:
+
+../src/app/driver/I2C_DRV.h:
+
+../src/config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom2_i2c_master.h:
+
+../src/config/LVLEU05/peripheral/sercom/i2c_master/plib_sercom_i2c_master_common.h:
+
+../src/app/service/log.h:
+
+../src/app/driver/MLX90614_DRV.h:
 
 ../src/config/LVLEU05/peripheral/gpio/plib_gpio.h:
+
+../src/app/driver/I2C_DRV.h:
 
 ../src/config/LVLEU05/definitions.h:
 
