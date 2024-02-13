@@ -238,7 +238,6 @@
           <itemPath>../src/packs/WBZ451_DFP/wbz451.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/app.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -342,7 +341,6 @@
         </logicalFolder>
       </logicalFolder>
       <itemPath>../src/main.c</itemPath>
-      <itemPath>../src/app.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

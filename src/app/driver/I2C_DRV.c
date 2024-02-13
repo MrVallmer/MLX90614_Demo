@@ -99,24 +99,24 @@ bool I2C_DRV_WriteRead (uint16_t sa, uint8_t *wdata, uint8_t wlength, uint8_t *r
             vTaskDelay(I2C_DRV_TIMEOUT_STEP_MS / portTICK_PERIOD_MS);
             timeout_counter_step++;        
             if (timeout_counter_step*I2C_DRV_TIMEOUT_STEP_MS > I2C_DRV_TIMEOUT_MS) {
-                LOG_print_error(I2C_SMB_LOG, "write-read operation timeout expired");
+                LOG_print_error(I2C_DRV_LOG, "write-read operation timeout expired");
                 return false;
             }                
         }
 
         // Capture possible error coming from I2C
         if (transfer_status != I2C_DRV_TRANSFER_STATUS_SUCCESS) {            
-            LOG_print_error(I2C_SMB_LOG, "write-read operation transfer status invalid. Transfer code: %d", transfer_status);
+            LOG_print_error(I2C_DRV_LOG, "write-read operation transfer status invalid. Transfer code: %d", transfer_status);
+            xSemaphoreGive( xSemaphore );
             return false;   
         }                    
 
         /* We have finished accessing the shared resource.  Release the semaphore. */
-        xSemaphoreGive( xSemaphore );
-            
+        xSemaphoreGive( xSemaphore );            
         return bValid;
     }
     
-    LOG_print_error(I2C_SMB_LOG, "driver resource access timeout expired");
+    LOG_print_error(I2C_DRV_LOG, "driver resource access timeout expired");
     return false;
 }
 
@@ -140,24 +140,24 @@ bool I2C_DRV_Write (uint16_t sa, uint8_t *wdata, uint8_t wlength)
             vTaskDelay(I2C_DRV_TIMEOUT_STEP_MS / portTICK_PERIOD_MS);
             timeout_counter_step++;        
             if (timeout_counter_step*I2C_DRV_TIMEOUT_STEP_MS > I2C_DRV_TIMEOUT_MS) {
-                LOG_print_error(I2C_SMB_LOG, "write operation timeout expired");
+                LOG_print_error(I2C_DRV_LOG, "write operation timeout expired");
                 return false;
             }                
         }
 
         // Capture possible error coming from I2C
         if (transfer_status != I2C_DRV_TRANSFER_STATUS_SUCCESS) {            
-            LOG_print_error(I2C_SMB_LOG, "write operation transfer status invalid. Transfer code: %d", transfer_status);
+            LOG_print_error(I2C_DRV_LOG, "write operation transfer status invalid. Transfer code: %d", transfer_status);
+            xSemaphoreGive( xSemaphore );
             return false;   
         }                    
 
         /* We have finished accessing the shared resource.  Release the semaphore. */
-        xSemaphoreGive( xSemaphore );
-            
+        xSemaphoreGive( xSemaphore );            
         return bValid;
     }
     
-    LOG_print_error(I2C_SMB_LOG, "driver resource access timeout expired");
+    LOG_print_error(I2C_DRV_LOG, "driver resource access timeout expired");
     return false;
 }
 
@@ -181,24 +181,24 @@ bool I2C_DRV_Read (uint16_t sa, uint8_t *rdata, uint8_t rlength)
             vTaskDelay(I2C_DRV_TIMEOUT_STEP_MS / portTICK_PERIOD_MS);
             timeout_counter_step++;        
             if (timeout_counter_step*I2C_DRV_TIMEOUT_STEP_MS > I2C_DRV_TIMEOUT_MS) {
-                LOG_print_error(I2C_SMB_LOG, "read operation timeout expired");
+                LOG_print_error(I2C_DRV_LOG, "read operation timeout expired");
                 return false;
             }                
         }
 
         // Capture possible error coming from I2C
         if (transfer_status != I2C_DRV_TRANSFER_STATUS_SUCCESS) {            
-            LOG_print_error(I2C_SMB_LOG, "read operation transfer status invalid. Transfer code: %d", transfer_status);
+            LOG_print_error(I2C_DRV_LOG, "read operation transfer status invalid. Transfer code: %d", transfer_status);
+            xSemaphoreGive( xSemaphore );
             return false;   
         }                    
 
         /* We have finished accessing the shared resource.  Release the semaphore. */
-        xSemaphoreGive( xSemaphore );
-            
+        xSemaphoreGive( xSemaphore );            
         return bValid;
     }
     
-    LOG_print_error(I2C_SMB_LOG, "driver resource access timeout expired");
+    LOG_print_error(I2C_DRV_LOG, "driver resource access timeout expired");
     return false;
 }
 

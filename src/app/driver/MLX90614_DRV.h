@@ -120,7 +120,7 @@ typedef enum {
 
 /// @brief configuration parameters.
 typedef union {
-    typedef struct {
+    struct {
         uint16_t pwr_pin;
         uint16_t init_timeout_ms;
         uint16_t write_timeout_ms;

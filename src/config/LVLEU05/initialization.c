@@ -263,14 +263,7 @@ void SYS_Initialize ( void* data )
     sysObj.sysTime = SYS_TIME_Initialize(SYS_TIME_INDEX_0, (SYS_MODULE_INIT *)&sysTimeInitData);
     
     /* MISRAC 2012 deviation block end */
-
-
-    /* MISRAC 2012 deviation block end */
-    APP_Initialize();
-
-
     NVIC_Initialize();
-
 
     /* MISRAC 2012 deviation block end */
 }

@@ -85,8 +85,9 @@ void LOG_initialize (bool enable) {
     
     uint8_t ret_code = 0;
     ret_code |= LOG_set_level(SYSTEM_LOG, LOG_INFO_LEVEL, "SYSTEM");
-    ret_code |= LOG_set_level(MLX90614_DRV_LOG, LOG_DEBUG_LEVEL, "MLX90614");
-    ret_code |= LOG_set_level(I2C_SMB_LOG, LOG_INFO_LEVEL, "I2C_SMB");
+    ret_code |= LOG_set_level(MLX90614_DRV_LOG, LOG_ERROR_LEVEL, "MLX90614_DRV");
+    ret_code |= LOG_set_level(MLX90614_PLUGIN_LOG, LOG_INFO_LEVEL, "MLX90614_PLUGIN");
+    ret_code |= LOG_set_level(I2C_DRV_LOG, LOG_ERROR_LEVEL, "I2C_DRV");
     
     if (ret_code != 0)
         LOG_print_critical(0, "Log module initialization error");

@@ -102,13 +102,18 @@ typedef enum
 typedef struct
 {    
 /* The plugin's current state */
-    int state;    
+    int state; 
+/* The plugin's error code */
+    int error_code;
+/* The thermal realy alarm */
+    bool thermal_relay_alarm;
 /* If Object temperature exceed the threshold value added to ambient temperature trig an alarm */    
-    float threshold;                                           
+    float threshold_on;   
+    float threshold_off; 
 /* Pooling cycle time */       
-    int pool_cycle_time;
+    int pool_cycle_time_ms;
 /* Watching window. Number of cycle that define the observation window */ 
-    int watching_cycle_number;
+    int max_watching_cycle_number;
 /* Starting measure in the watching window  */        
     float start_object_measure;
 /* Ending measure in the watching window  */    
@@ -116,11 +121,18 @@ typedef struct
 /* Mean measure value in the watching window  */    
     float mean_object_measure;
 /* Starting time of watching window  */    
-    float watching_start_time;
+    clock_utc_time_t watching_start_time;
 /* Ending time of watching window  */ 
-    float watching_stop_time;
+    clock_utc_time_t watching_stop_time;
+/* Current object measure  */        
+    float tobj;
+/* Current ambiente measure  */    
+    float ta;    
+/* Current cycle number  */    
+    int watching_cycle_number;    
+    
 /* Driver configuration */     
-    mlx90614_drv_config_t driver_config;
+    mlx90614_drv_config_t driver_config;    
 
 } mlx90614_plugin_data_t;
 

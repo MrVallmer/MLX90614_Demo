@@ -54,6 +54,8 @@
 #include "definitions.h"
 #include "sys_tasks.h"
 
+#include "app/plugin/MLX90614_plugin.h"
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -67,7 +69,7 @@ static void lAPP_Tasks(  void *pvParameters  )
 {   
     while(true)
     {
-        APP_Tasks();
+        MLX90614_Plugin_Tasks();
     }
 }
 
@@ -90,19 +92,19 @@ static void lAPP_Tasks(  void *pvParameters  )
 void SYS_Tasks ( void )
 {
     /* Maintain system services */
-    
+    LOG_initialize (true);  
 
     /* Maintain Device Drivers */
-    
+    I2C_DRV_Start();
 
     /* Maintain Middleware & Other Libraries */
-    
+    MLX90614_Plugin_Initialize(NULL);    
 
     /* Maintain the application's state machine. */
         /* Create OS Thread for APP_Tasks. */
     (void) xTaskCreate((TaskFunction_t) lAPP_Tasks,
                 "APP_Tasks",
-                256,
+                1024,
                 NULL,
                 1,
                 &xAPP_Tasks);
