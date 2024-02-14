@@ -128,8 +128,8 @@ void MLX90614_Plugin_Initialize ( mlx90614_drv_config_t *_driver_config) {
     // Hardcode to remove
     plugin_data.threshold_on = 6;
     plugin_data.threshold_off = 4;
-    plugin_data.pool_cycle_time_ms = 100;
-    plugin_data.max_watching_cycle_number = 100;  
+    plugin_data.pool_cycle_time_ms = 500;
+    plugin_data.max_watching_cycle_number = 10;  
     
     /* Load driver configuration. (if defined) */
     if (_driver_config != NULL) {
@@ -302,7 +302,7 @@ void MLX90614_Plugin_Tasks ( void )
         {
             if (plugin_data.thermal_relay_alarm)
                 LOG_print_info(MLX90614_PLUGIN_LOG, "Thermal relay alarm %d", plugin_data.thermal_relay_alarm);
-            LOG_print_info(MLX90614_PLUGIN_LOG, "Watching window <%d:%d:%d.%d>T<%d:%d:%d.%d>: start %f, stop %f, mean %f", 
+            LOG_print_info(MLX90614_PLUGIN_LOG, "Watching window %02d:%02d:%02d.%03dT%02d:%02d:%02d.%03d, start %f, stop %f, mean %f", 
                     plugin_data.watching_start_time.hour,
                     plugin_data.watching_start_time.minute,
                     plugin_data.watching_start_time.second,
@@ -320,7 +320,6 @@ void MLX90614_Plugin_Tasks ( void )
             // Reset watching cycle number
             plugin_data.watching_cycle_number = 0;
             plugin_data.state = MLX90614_PLUGIN_STATE_POOL_SENSOR;
-            vTaskDelay(plugin_data.pool_cycle_time_ms / portTICK_PERIOD_MS);
             break;
         }
         
