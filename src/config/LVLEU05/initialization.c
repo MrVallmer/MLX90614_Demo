@@ -234,7 +234,7 @@ void SYS_Initialize ( void* data )
 
 
   
-    CLOCK_Initialize();
+    CLK_Initialize();
     /* Configure Prefetch, Wait States */
     PCHE_REGS->PCHE_CHECON = (PCHE_REGS->PCHE_CHECON & (~(PCHE_CHECON_PFMWS_Msk | PCHE_CHECON_ADRWS_Msk | PCHE_CHECON_PREFEN_Msk)))
                                     | (PCHE_CHECON_PFMWS(1) | PCHE_CHECON_PREFEN(1));
@@ -266,7 +266,11 @@ void SYS_Initialize ( void* data )
 
 
     /* MISRAC 2012 deviation block end */
+    APP_Initialize();
+
+
     NVIC_Initialize();
+
 
     /* MISRAC 2012 deviation block end */
 }

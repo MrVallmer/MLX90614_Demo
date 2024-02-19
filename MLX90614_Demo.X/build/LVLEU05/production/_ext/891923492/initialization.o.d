@@ -116,28 +116,27 @@ build/LVLEU05/production/_ext/891923492/initialization.o: \
  ../src/third_party/rtos/FreeRTOS/Source/include/mpu_wrappers.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/task.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/list.h \
- ../src/config/LVLEU05/system/time/sys_time.h \
- ../src/config/LVLEU05/system/system.h \
- ../src/config/LVLEU05/system/system_common.h \
- ../src/config/LVLEU05/system/system_module.h \
- ../src/config/LVLEU05/system/system_common.h \
- ../src/config/LVLEU05/system/time/sys_time_definitions.h \
  ../src/config/LVLEU05/system/int/sys_int.h \
  ../src/config/LVLEU05/system/int/sys_int_mapping.h \
- ../src/config/LVLEU05/configuration.h \
- ../src/config/LVLEU05/system/int/sys_int.h \
  ../src/config/LVLEU05/system/ports/sys_ports.h \
  ../src/config/LVLEU05/system/ports/sys_ports_mapping.h \
  ../src/config/LVLEU05/peripheral/gpio/plib_gpio.h \
  ../src/config/LVLEU05/system/cache/sys_cache.h \
- ../src/config/LVLEU05/osal/osal.h \
+ ../src/config/LVLEU05/osal/osal.h ../src/config/LVLEU05/configuration.h \
  ../src/config/LVLEU05/osal/osal_definitions.h \
  ../src/config/LVLEU05/osal/osal_freertos.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/queue.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/task.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/semphr.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/queue.h \
- ../src/config/LVLEU05/system/debug/sys_debug.h
+ ../src/config/LVLEU05/system/debug/sys_debug.h \
+ ../src/config/LVLEU05/system/system.h \
+ ../src/config/LVLEU05/system/system_common.h \
+ ../src/config/LVLEU05/system/system_module.h \
+ ../src/config/LVLEU05/system/system_common.h \
+ ../src/config/LVLEU05/system/time/sys_time.h \
+ ../src/config/LVLEU05/system/time/sys_time_definitions.h \
+ ../src/config/LVLEU05/system/int/sys_int.h ../src/app.h
 
 ../src/config/LVLEU05/configuration.h:
 
@@ -375,25 +374,9 @@ build/LVLEU05/production/_ext/891923492/initialization.o: \
 
 ../src/third_party/rtos/FreeRTOS/Source/include/list.h:
 
-../src/config/LVLEU05/system/time/sys_time.h:
-
-../src/config/LVLEU05/system/system.h:
-
-../src/config/LVLEU05/system/system_common.h:
-
-../src/config/LVLEU05/system/system_module.h:
-
-../src/config/LVLEU05/system/system_common.h:
-
-../src/config/LVLEU05/system/time/sys_time_definitions.h:
-
 ../src/config/LVLEU05/system/int/sys_int.h:
 
 ../src/config/LVLEU05/system/int/sys_int_mapping.h:
-
-../src/config/LVLEU05/configuration.h:
-
-../src/config/LVLEU05/system/int/sys_int.h:
 
 ../src/config/LVLEU05/system/ports/sys_ports.h:
 
@@ -404,6 +387,8 @@ build/LVLEU05/production/_ext/891923492/initialization.o: \
 ../src/config/LVLEU05/system/cache/sys_cache.h:
 
 ../src/config/LVLEU05/osal/osal.h:
+
+../src/config/LVLEU05/configuration.h:
 
 ../src/config/LVLEU05/osal/osal_definitions.h:
 
@@ -418,3 +403,19 @@ build/LVLEU05/production/_ext/891923492/initialization.o: \
 ../src/third_party/rtos/FreeRTOS/Source/include/queue.h:
 
 ../src/config/LVLEU05/system/debug/sys_debug.h:
+
+../src/config/LVLEU05/system/system.h:
+
+../src/config/LVLEU05/system/system_common.h:
+
+../src/config/LVLEU05/system/system_module.h:
+
+../src/config/LVLEU05/system/system_common.h:
+
+../src/config/LVLEU05/system/time/sys_time.h:
+
+../src/config/LVLEU05/system/time/sys_time_definitions.h:
+
+../src/config/LVLEU05/system/int/sys_int.h:
+
+../src/app.h:
